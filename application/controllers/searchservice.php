@@ -14,6 +14,9 @@ class SearchService extends CI_Controller
 		$this->load->helper('email');
 		$query = $this->db->query("SELECT * FROM search WHERE active = 1 ORDER BY user_id");
 		
+		$data['title'] = "Wyszukane aukcje";
+		$data['searchArray'] = array();
+		
 		foreach ($query->result() as $row) 
 		{
 
@@ -28,13 +31,25 @@ class SearchService extends CI_Controller
 			$offset = 0;
 			$limit = 100;
 			
-			$allegroResult = $this->allegrowebapisoapclient->searchAuction($keyword, $buyNow, $catId, $offset, $city, 
-				$state, $minPrice, $maxPrice, $limit);
+			do
+			{				
+				$allegroResult = $this->allegrowebapisoapclient->searchAuction($keyword, $buyNow, $catId, $offset, $city, 
+					$state, $minPrice, $maxPrice, $limit);
+
+				$data['searchArray'] = $allegroResult->searchArray->item;
 				
-			print_r($allegroResult);			
-			
-		}		
+				$offset += $limit;
+			} 
+			while ($offset < $allegroResult->searchCount);
+						
+		}
+
+		$this->load ->view('templates/header', $data);		
+		$this->load->view('search_items_view', $data);		
+		$this->load->view('templates/footer');
+		
 	}
+	
 	
 }
 

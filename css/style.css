@@ -81,3 +81,9 @@ table td, table th{
 table td:first-child, table td:last-child, table th:first-child, table th:last-child{
 	padding: 0px;
 }
+
+table td img{
+	width: auto;
+	height: 100px;
+	border: 1px solid #4F5155;
+}
