@@ -18,3 +18,4 @@
 		?>
 	</tbody>
 </table>
+<a href='<?php echo site_url('allegro/dodajFiltr'); ?>'>Dodaj filtr</a>
