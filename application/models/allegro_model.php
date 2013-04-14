@@ -7,10 +7,10 @@ class Allegro_model extends CI_Model {
 	}
 
 	public function createList() {
-		//tu funkcje wyciągające z bazy danych
-		$list = array( array("nazwaFiltru" => "Pierwszy", "test" => "test"), array("nazwaFiltru" => "Drugi", "test" => "test2"));
+		
+		$query = $this -> db -> query('SELECT id, keywords, id_cat, buyNow, city, voivodeship, minPrice, maxPrice FROM search WHERE active=1');
 
-		return $list;
+		return $query->result();
 	}
 
 }

@@ -3,15 +3,22 @@
 <table>
 	<thead>
 		<tr>
-			<th>Nazwa własna filtru</th><th>Jakieś drugie pole</th>
+			<th>Słowa kluczowe</th><th>Kategoria</th><th>Kup teraz</th><th>Miasto</th><th>Województwo</th><th>Minimalna cena</th><th>Maksymalna cena</th><th></th>
 		</tr>
 	</thead>
 	<tbody>
 		<?php
-		foreach ($list as $value) {
+		foreach ($list as $row) {
 			echo "<tr>";
-			
-				echo "<td>".$value['nazwaFiltru']."</td><td>".$value['test']."</td>";
+				$id = $row->id;
+				foreach($row as $key => $value)
+				{
+					if($key!='id')
+					{
+						echo "<td>".$value."</td>";
+					}
+				}
+				echo "<td><a href='".site_url("allegro/usun/$id")."'>Usuń</a></td>";
 			
 			echo "</tr>";
 		}
