@@ -1,0 +1,5 @@
+Options -Indexes +ExecCGI
+AddHandler cgi-script .cgi .pl
+
+# Usuniecie ponizszej linijki moze powodowac problemy z niektorymi regulkami w glownym katalogu domeny.
+RewriteEngine Off
