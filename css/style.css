@@ -74,3 +74,10 @@ p.footer{
 	padding: 5px 0;
 	color: red;
 }
+
+table td, table th{
+	padding: 0px 10px;
+}
+table td:first-child, table td:last-child, table th:first-child, table th:last-child{
+	padding: 0px;
+}
