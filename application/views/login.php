@@ -10,4 +10,3 @@
 <a href='<?php echo site_url('authentication/register'); ?>'>Zarejestruj konto</a>
 </div>
 
-<!-- koment -->
