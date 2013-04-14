@@ -48,7 +48,15 @@ class Allegro extends CI_Controller {
 			$voivodeship =$_POST['voivodeship'];
 			$minPrice = $_POST['minPrice'];
 			$maxPrice =$_POST['maxPrice'];
-
+			
+			if($buyNow=="true")
+			{
+				$buyNow=1;
+			}
+			else {
+				$buyNow=0;
+			}
+			
 			$this -> load -> database();
 			$data = array(
 			'user_id' => $user_id,
