@@ -24,7 +24,7 @@
 					Kup teraz
 				</td>
 				<td>
-					<?php echo form_input('buyNow', ''); ?>
+					<?php echo form_checkbox('buyNow', 'true'); ?>
 				</td>
 			</tr>
 			<tr>

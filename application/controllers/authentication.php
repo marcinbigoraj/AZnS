@@ -64,7 +64,7 @@ class Authentication extends CI_Controller
 				
 				if ($this->ion_auth->register($username, $passwd, $email, $phone))
 				{
-					redirect('authentication/login');					
+					redirect('allegro/lista');					
 				}
 				else 
 				{

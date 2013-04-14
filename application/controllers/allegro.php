@@ -8,7 +8,7 @@ class Allegro extends CI_Controller {
 
 	public function lista() {
 		if (!$this -> ion_auth -> logged_in()) {
-			redirect('main/index');
+			redirect('authentication/login');
 		}
 
 		$this -> load -> model('allegro_model');
@@ -23,7 +23,7 @@ class Allegro extends CI_Controller {
 
 	public function dodajFiltr() {
 		if (!$this -> ion_auth -> logged_in()) {
-			redirect('main/index');
+			redirect('authentication/login');
 		}
 
 		$data['title'] = "Dodaj filtr";
@@ -35,7 +35,7 @@ class Allegro extends CI_Controller {
 
 	public function zapiszFiltr() {
 		if (!$this -> ion_auth -> logged_in()) {
-			redirect('main/index');
+			redirect('authentication/login');
 		}
 
 		if (isset($_POST['dodajFiltr'])) {
@@ -48,7 +48,15 @@ class Allegro extends CI_Controller {
 			$voivodeship =$_POST['voivodeship'];
 			$minPrice = $_POST['minPrice'];
 			$maxPrice =$_POST['maxPrice'];
-
+			
+			if($buyNow=="true")
+			{
+				$buyNow=1;
+			}
+			else {
+				$buyNow=0;
+			}
+			
 			$this -> load -> database();
 			$data = array(
 			'user_id' => $user_id,
@@ -70,7 +78,7 @@ class Allegro extends CI_Controller {
 	
 	public function usun($id) {
 		if (!$this -> ion_auth -> logged_in()) {
-			redirect('main/index');
+			redirect('authentication/login');
 		}
 		$this -> load -> database();
 		$query = $this -> db -> query("SELECT user_id FROM search WHERE id=$id");
