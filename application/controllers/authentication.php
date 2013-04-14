@@ -44,6 +44,7 @@ class Authentication extends CI_Controller
 	{		
 		$data['title'] = "Rejestracja";
 		$data['registerForm'] = $this->forms_model->createRegisterForm();
+		$data['errors'] = '';
 		
 		if (isset($_POST['registerSend']))
 		{
@@ -59,11 +60,16 @@ class Authentication extends CI_Controller
 				$username = $_POST['registerUsername'];
 				$passwd = $_POST['registerPassword'];
 				$email = $_POST['registerEmail'];
-				$phone = array('phone' => $_POST['registerPhone']);
+				$phone = array('phone' => $_POST['registerPhone']);				
 				
-				$this->ion_auth->register($username, $passwd, $email, $phone);
-				
-				redirect('authentication/login');
+				if ($this->ion_auth->register($username, $passwd, $email, $phone))
+				{
+					redirect('authentication/login');					
+				}
+				else 
+				{
+					$data['errors'] = $this->ion_auth->errors();
+				}
 			}
 			
 		} 

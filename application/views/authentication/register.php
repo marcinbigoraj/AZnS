@@ -2,6 +2,7 @@
 
 <div id="errorsContainer">
 <?php echo validation_errors(); ?>
+<?php echo $errors; ?>
 </div>
 
 <div id="registerForm" class="form">
