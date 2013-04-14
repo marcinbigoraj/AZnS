@@ -1,4 +1,4 @@
-<h1>Rejestracja użytkownika</h1>
+<h1><?php echo $title; ?></h1>
 
 <div id="errorsContainer">
 <?php echo validation_errors(); ?>
