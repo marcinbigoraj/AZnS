@@ -27,9 +27,20 @@ class Authentication extends CI_Controller
 			}
 		}
 		
+		if ($this->ion_auth->logged_in())
+		{	
+			redirect('main/index');
+		}
+		
 		$this->load->view('templates/header', $data);
-		$this->load->view('login', $data);
+		$this->load->view('authentication/login', $data);
 		$this->load->view('templates/footer');	
+	}
+	
+	public function logout()
+	{
+		$this->ion_auth->logout();
+		redirect('authentication/login');
 	}
 	
 	public function register()
@@ -58,15 +69,14 @@ class Authentication extends CI_Controller
 				
 				$this->ion_auth->register($username, $passwd, $email, $phone);
 				
-				redirect('/authentication/login');
+				redirect('authentication/login');
 			}
 			
 		} 
 
 		$this->load->view('templates/header', $data);
-		$this->load->view('register', $data);	
-		$this->load->view('templates/footer');
-		
+		$this->load->view('authentication/register', $data);	
+		$this->load->view('templates/footer');		
 	}
 
 }
