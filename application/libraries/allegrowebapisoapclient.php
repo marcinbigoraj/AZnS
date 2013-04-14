@@ -75,33 +75,18 @@ class AllegroWebAPISoapClient extends SoapClient
 			$stateOptions = $state;
 		}
 		
-		$searchOptions = array(
-			'search-string' => $text,
-			'search-options' => $searchOptions,
-			'search-order' => 1,
-			'search-order-type' => 0,
-			'search-country' => 0,			
-			'search-category' => $category,
-			'search-offset' => $offset,
-			'search-city' => $cityOptions,
-			'search-state' => $stateOptions,
-			'search-price-from' => $priceFrom,
-			'search-price-to' => $priceTo,
-			'search-limit' => $limit,
-			'search-order-fulfillment-time' => 999,
-			'search-user' => 0
-		);
+	
 		
-		$searchOptions = array(
+		$search = array(
 			'search-string' => 'test',
 			'search-options' => 1,
 			'search-order' => 1,
 			'search-order-type' => 0,
-			'search-country' => 0,			
+			'search-country' => 1,			
 			'search-category' => 0,
 			'search-offset' => 0,
 			'search-city' => '',
-			'search-state' => '',
+			'search-state' => 0,
 			'search-price-from' => 0,
 			'search-price-to' => 0,
 			'search-limit' => 100,
@@ -111,7 +96,7 @@ class AllegroWebAPISoapClient extends SoapClient
 		
 		$sessionHandle = $this->session['session-handle-part'];
 		
-		return $this->doSearch($sessionHandle, $searchOptions);		
+		return $this->doSearch($sessionHandle, $search);		
 	}
 
 }
