@@ -3,43 +3,52 @@
 class BasicDataService extends CI_Controller
 {
 		
-		public function __construct() 
+	public function __construct() 
 	{
 		parent::__construct();
 	}
 	
 	
-	public function getListOfCategories(){
+	public function getListOfCategories()
+	{
 		$this->load->library('allegrowebapisoapclient');
-		$cat = $this->allegrowebapisoapclient->getMainCategories();
-		$this -> load -> database();
+		$cat = $this->allegrowebapisoapclient->getMainCategories();		
+		
+		foreach($cat->catsList->item as $item)
+		{
 			
-		foreach($cat['cats-list'] as &$item){
-			echo '<p>'.$item->{'cat-id'}.'  '.$item->{'cat-name'}.'  '.$item->{'cat-parent'}.'</p>';
+			echo '<p>'.$item->catId.' '.$item->catName.' '.$item->catParent.'</p>';
+			
 			$data = array(
-			'id_cat' => $item->{'cat-id'},
-			'name' => $item->{'cat-name'},
-			'parent_id' => $item->{'cat-parent'},
+				'id_cat' => $item->catId,
+				'name' => $item->catName,
+				'parent_id' => $item->catParent,
 			);
-			$this -> db -> insert('categories', $data);
+			
+			$this->db->insert('categories', $data);
 		}
 		
-		$catVersion= $cat['ver-key'];
+		$catVersion = $cat->verKey;
 	}
 	
-	public function getListOfStates(){
+	public function getListOfStates()
+	{
 		$this->load->library('allegrowebapisoapclient');
 		$state = $this->allegrowebapisoapclient->getStates();
-		$this -> load -> database();
 			
-		foreach($state as &$item){
-			echo '<p>'.$item->{'state-id'}.'  '.$item->{'state-name'}.'</p>';
-		$data = array(
-			'id_state' => $item->{'state-id'},
-			'name' => $item->{'state-name'},
+		foreach($state->statesInfoArray->item as $item)
+		{
+			echo '<p>'.$item->stateId.' '.$item->stateName.'</p>';
+			
+			$data = array(
+				'id_state' => $item->stateId,
+				'name' => $item->stateName,
 			);
-			$this -> db -> insert('states', $data);
+			
+			$this->db->insert('states', $data);
 		}
 	}
+	
 }
+
 ?>

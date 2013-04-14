@@ -7,7 +7,7 @@ class AllegroWebAPISoapClient extends SoapClient
 	private $session;
 
 	public $config = array(
-		'url' => 'https://webapi.allegro.pl/uploader.php?wsdl',
+		'url' => 'https://webapi.allegro.pl/service.php?wsdl',
 		'component' => 1, // component AllegroWebAPI
 		'country' => 228, // kod kraju, 1 - Polska, 228 - serwis testowy
 		'webapikey' => '652d6c74', // klucz API
@@ -20,9 +20,13 @@ class AllegroWebAPISoapClient extends SoapClient
 		parent::__construct($this->config['url']);
 		
 		try
-		{		
-			$this->APIVersion = $this->doQuerySysStatus($this->config['component'], $this->config['country'], 
-					$this->config['webapikey']);
+		{
+			$doQuerySysStatus_request = array(
+			   'sysvar' => $this->config['component'],
+			   'countryId' => $this->config['country'],
+			   'webapiKey' => $this->config['webapikey']
+			);
+			$this->APIVersion = $this->doQuerySysStatus($doQuerySysStatus_request);
 			$this->login();			
 		}
 		catch(SoapFault $error)
@@ -40,9 +44,14 @@ class AllegroWebAPISoapClient extends SoapClient
 		} 
 		else 
 		{
-			$this->session = $this->doLoginEnc($this->config['login'], 
-					base64_encode(hash('sha256', $this->config['passwd'], true)), 
-					$this->config['country'], $this->config['webapikey'], $this->APIVersion['ver-key']);
+			$doLoginEnc_request = array(
+				'userLogin' => $this->config['login'],
+			   	'userHashPassword' => base64_encode(hash('sha256', $this->config['passwd'], true)),
+			   	'countryCode' => $this->config['country'],
+			   	'webapiKey' => $this->config['webapikey'],
+			   	'localVersion' => $this->APIVersion->verKey
+			);	
+			$this->session = $this->doLoginEnc($doLoginEnc_request);
 		}
 		
 		return $this->session;
@@ -50,12 +59,21 @@ class AllegroWebAPISoapClient extends SoapClient
 	
 	public function getMainCategories() 
 	{
-		return $this->doGetCatsData($this->config['country'], 0, $this->config['webapikey']);
+		$doGetCatsData_request = array(
+		   'countryId' => $this->config['country'],
+		   'localVersion' => 0,
+		   'webapiKey' => $this->config['webapikey']
+		);
+		return $this->doGetCatsData($doGetCatsData_request);
 	}
 	
 	public function getStates() 
 	{
-		return $this->doGetStatesInfo($this->config['country'], $this->config['webapikey']);
+		$doGetStatesInfo_request = array(
+			'countryCode' => $this->config['country'],
+   			'webapiKey' => $this->config['webapikey']
+		);
+		return $this->doGetStatesInfo($doGetStatesInfo_request);
 	}
 	
 	public function searchAuction($text, $buyNow, $category, $offset, $city, $state, $priceFrom, $priceTo, $limit)
@@ -80,28 +98,24 @@ class AllegroWebAPISoapClient extends SoapClient
 			$stateOptions = $state;
 		}
 		
-	
+		$sessionHandle = $this->session->sessionHandlePart;	
+			
+		$doSearch_request = array(
+			'sessionHandle' => $sessionHandle,
+			'searchQuery' => array(
+				'searchString' => $text,
+				'searchOptions' => $searchOptions,
+				'searchCategory' => $category,
+				'searchOffset' => $offset,
+				'searchCity' => $cityOptions,
+				'searchState' => $stateOptions,
+				'searchPriceFrom' => $priceFrom,
+				'searchPriceTo' => $priceTo,
+				'searchLimit' => $limit				
+			)
+		);	
 		
-		$search = array(
-			'search-string' => 'test',
-			'search-options' => 1,
-			'search-order' => 1,
-			'search-order-type' => 0,
-			'search-country' => 1,			
-			'search-category' => 0,
-			'search-offset' => 0,
-			'search-city' => '',
-			'search-state' => 0,
-			'search-price-from' => 0,
-			'search-price-to' => 0,
-			'search-limit' => 100,
-			'search-order-fulfillment-time' => 999,
-			'search-user' => 0
-		);
-		
-		$sessionHandle = $this->session['session-handle-part'];
-		
-		return $this->doSearch($sessionHandle, $search);		
+		return $this->doSearch($doSearch_request);		
 	}
 
 }
