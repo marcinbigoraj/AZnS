@@ -1,6 +1,6 @@
 <?php
 
-class Categories extends CI_Controller
+class BasicDataService extends CI_Controller
 {
 		
 		public function __construct() 
