@@ -23,6 +23,23 @@ class Categories extends CI_Controller
 			);
 			$this -> db -> insert('categories', $data);
 		}
+		
+		$catVersion= $cat['ver-key'];
+	}
+	
+	public function getListOfStates(){
+		$this->load->library('allegrowebapisoapclient');
+		$state = $this->allegrowebapisoapclient->getStates();
+		$this -> load -> database();
+			
+		foreach($state as &$item){
+			echo '<p>'.$item->{'state-id'}.'  '.$item->{'state-name'}.'</p>';
+		$data = array(
+			'id_state' => $item->{'state-id'},
+			'name' => $item->{'state-name'},
+			);
+			$this -> db -> insert('states', $data);
+		}
 	}
 }
 ?>

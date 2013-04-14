@@ -53,6 +53,11 @@ class AllegroWebAPISoapClient extends SoapClient
 		return $this->doGetCatsData($this->config['country'], 0, $this->config['webapikey']);
 	}
 	
+	public function getStates() 
+	{
+		return $this->doGetStatesInfo($this->config['country'], $this->config['webapikey']);
+	}
+	
 	public function searchAuction($text, $buyNow, $category, $offset, $city, $state, $priceFrom, $priceTo, $limit)
 	{
 		$searchOptions = 1; // którekolwiek z wpisanych słów
