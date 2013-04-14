@@ -9,10 +9,7 @@ class Authentication extends CI_Controller
 	}
 	
 	public function login()
-	{		
-		$this->load->model('forms_model');
-		$this->load->library('form_validation');
-		
+	{				
 		$data['title'] = "Logowanie";
 		$data['loginForm'] =  $this->forms_model->createLoginForm();
 		$data['errors'] = '';
@@ -44,10 +41,7 @@ class Authentication extends CI_Controller
 	}
 	
 	public function register()
-	{
-		$this->load->model('forms_model');
-		$this->load->library('form_validation');
-		
+	{		
 		$data['title'] = "Rejestracja";
 		$data['registerForm'] = $this->forms_model->createRegisterForm();
 		
