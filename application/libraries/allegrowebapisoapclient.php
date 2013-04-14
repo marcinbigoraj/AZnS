@@ -50,6 +50,7 @@ class AllegroWebAPISoapClient extends SoapClient
 	
 	public function getMainCategories() 
 	{
+		return $this->doGetCatsData($this->config['country'], 0, $this->config['webapikey']);
 	}
 
 }
