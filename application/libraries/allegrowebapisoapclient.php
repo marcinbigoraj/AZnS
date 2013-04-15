@@ -10,7 +10,6 @@ class AllegroWebAPISoapClient extends SoapClient
 	public function __construct()
 	{
 		$ci = get_instance(); 
-		$ci->load->config('allegro_app_config');
 		$this->config = $ci->config->item('AllegroAPI');
 				
 		parent::__construct($this->config['url']);
@@ -27,7 +26,7 @@ class AllegroWebAPISoapClient extends SoapClient
 		}
 		catch(SoapFault $error)
 		{
-			echo "Error: " . $error->faultcode . ', ' . $error->faultstring;
+			log_message('error', "SoapClient initialize error: " . $error->faultcode . ', ' . $error->faultstring);
 		}
 	}
 	
@@ -95,9 +94,7 @@ class AllegroWebAPISoapClient extends SoapClient
 		}
 		
 		$sessionHandle = $this->session->sessionHandlePart;	
-			
-		
-			
+				
 		$doSearch_request = array(
 			'sessionHandle' => $sessionHandle,
 			'searchQuery' => array(

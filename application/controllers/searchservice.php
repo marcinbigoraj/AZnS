@@ -68,7 +68,7 @@ class SearchService extends CI_Controller {
 								
 								array_push($searchedData[$userId]['auctions'], $item);	
 								
-								//$this->db->query("INSERT INTO found_auctions VALUES($userId,$item->sItId)");
+								$this->db->query("INSERT INTO found_auctions VALUES($userId,$item->sItId)");
 															
 							}
 
@@ -182,8 +182,8 @@ class SearchService extends CI_Controller {
 		$this->phpmailer->AddAddress($To);
 		
 		if (!$this->phpmailer->Send())
-		{
-			echo 'Mailer Error: ' . $this->phpmailer->ErrorInfo;
+		{			    
+			log_message('error', "Mail send error: " . $this->phpmailer->ErrorInfo);
 		}
 		
 	}
