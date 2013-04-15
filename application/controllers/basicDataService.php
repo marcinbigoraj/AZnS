@@ -35,7 +35,13 @@ class BasicDataService extends CI_Controller
 	{
 		$this->load->library('allegrowebapisoapclient');
 		$state = $this->allegrowebapisoapclient->getStates();
-			
+		
+		$data = array(
+				'id_state' => 0,
+				'name' => "Dowolne",
+			);	
+		$this->db->insert('states', $data);
+		
 		foreach($state->statesInfoArray->item as $item)
 		{
 			echo '<p>'.$item->stateId.' '.$item->stateName.'</p>';

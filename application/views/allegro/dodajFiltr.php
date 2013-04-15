@@ -40,7 +40,7 @@
 					Województwo
 				</td>
 				<td>
-					<?php echo form_input('voivodeship', ''); ?>
+					<?php echo form_dropdown('voivodeship', $wojewodztwa); ?>
 				</td>
 			</tr>
 			<tr>

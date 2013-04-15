@@ -27,7 +27,13 @@ class Allegro extends CI_Controller {
 		}
 
 		$data['title'] = "Dodaj filtr";
-
+		$query= $this -> db -> query("SELECT * FROM states");
+		$data['wojewodztwa'] = array();
+		foreach($query->result() as $row)
+		{
+			$data['wojewodztwa'][$row->id_state]=$row->name;
+		}
+		
 		$this -> load -> view('templates/header', $data);
 		$this -> load -> view('allegro/dodajFiltr', $data);
 		$this -> load -> view('templates/footer');
