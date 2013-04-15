@@ -100,6 +100,8 @@ class AllegroWebAPISoapClient extends SoapClient
 		
 		$sessionHandle = $this->session->sessionHandlePart;	
 			
+		
+			
 		$doSearch_request = array(
 			'sessionHandle' => $sessionHandle,
 			'searchQuery' => array(
