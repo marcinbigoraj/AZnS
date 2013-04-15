@@ -16,7 +16,21 @@
 					Kategoria
 				</td>
 				<td>
-					<?php echo form_dropdown('id_cat', $kategorie); ?>
+					<select name="id_cat">
+						<?php 
+							foreach($kategorie as $kategoria )
+							{
+								$nazwa = "";
+								for($i=0; $i<$kategoria->depth; $i++)
+								{
+									$nazwa.="---";
+								}
+								$nazwa.=$kategoria->name;
+								echo "<option value='".$kategoria->id_cat."'>$nazwa</option>";
+							}
+							?>
+					</select>
+					
 				</td>
 			</tr>
 			<tr>
