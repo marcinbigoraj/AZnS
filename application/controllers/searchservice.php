@@ -55,15 +55,12 @@ class SearchService extends CI_Controller {
 			}
 		}
 
-		
+		//przydałoby się tutaj ignorowanie błędów bazy
 		foreach($data['searchArray'] as $item)
 		{
-			try{
+			
 			$this->db->query("INSERT INTO found_auctions VALUES($currentUserId,$item->sItId)");
-			}
-			catch(Exception $e){
-				
-			}
+			
 		}
 		
 		
