@@ -9,7 +9,9 @@ class SearchService extends CI_Controller {
 	public function search() {
 		$this -> load -> library('allegrowebapisoapclient');
 		$this -> load -> helper('email');
-		$query = $this -> db -> query("SELECT * FROM search WHERE active = 1 ORDER BY user_id");
+
+		$currentUserId = $this -> ion_auth -> user() -> row() -> id;
+		$query = $this -> db -> query("SELECT * FROM search WHERE active = 1 AND user_id=$currentUserId");
 
 		$data['title'] = "Wyszukane aukcje";
 		$data['searchArray'] = array();
@@ -32,7 +34,17 @@ class SearchService extends CI_Controller {
 
 					$allegroResult = $this -> allegrowebapisoapclient -> searchAuction($keyword, $buyNow, $catId, $offset, $city, $state, $minPrice, $maxPrice, $limit);
 					if ($allegroResult -> searchCount != 0) {
-						$data['searchArray'] = $allegroResult -> searchArray -> item;
+						foreach($allegroResult -> searchArray -> item as $item)
+						{
+							
+							$query = $this->db->query("SELECT * FROM found_auctions WHERE id_user=$currentUserId AND id_auc=$item->sItId");
+							if($query->num_rows() == 0)
+							{
+								array_push($data['searchArray'], $item);
+								
+							}
+							
+						}
 
 						$offset += $limit;
 					}
@@ -42,6 +54,20 @@ class SearchService extends CI_Controller {
 
 			}
 		}
+
+		
+		foreach($data['searchArray'] as $item)
+		{
+			try{
+			$this->db->query("INSERT INTO found_auctions VALUES($currentUserId,$item->sItId)");
+			}
+			catch(Exception $e){
+				
+			}
+		}
+		
+		
+		
 
 		$this -> load -> view('templates/header', $data);
 		$this -> load -> view('search_items_view', $data);
