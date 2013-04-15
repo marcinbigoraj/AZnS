@@ -14,6 +14,13 @@ class BasicDataService extends CI_Controller
 		$this->load->library('allegrowebapisoapclient');
 		$cat = $this->allegrowebapisoapclient->getMainCategories();		
 		
+		$data = array(
+				'id_cat' => 0,
+				'name' => "Dowolna",
+				'parent_id' => 0,
+			);
+		$this->db->insert('categories', $data);
+		
 		foreach($cat->catsList->item as $item)
 		{
 			

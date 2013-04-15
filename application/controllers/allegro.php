@@ -34,6 +34,13 @@ class Allegro extends CI_Controller {
 			$data['wojewodztwa'][$row->id_state]=$row->name;
 		}
 		
+		$query= $this -> db -> query("SELECT * FROM categories");
+		$data['kategorie'] = array();
+		foreach($query->result() as $row)
+		{
+			$data['kategorie'][$row->id_cat]=$row->name;
+		}
+		
 		$this -> load -> view('templates/header', $data);
 		$this -> load -> view('allegro/dodajFiltr', $data);
 		$this -> load -> view('templates/footer');

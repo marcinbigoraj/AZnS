@@ -16,7 +16,7 @@
 					Kategoria
 				</td>
 				<td>
-					<?php echo form_input('id_cat', ''); ?>
+					<?php echo form_dropdown('id_cat', $kategorie); ?>
 				</td>
 			</tr>
 			<tr>
