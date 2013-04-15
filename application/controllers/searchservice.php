@@ -167,18 +167,17 @@ class SearchService extends CI_Controller {
 
 	private function mailSender($Subject, $BodyHtml, $To)
 	{
-		
 		$this->phpmailer->IsSMTP();
 		$this->phpmailer->SMTPAuth = true;
-		$this->phpmailer->SMTPSecure = 'tls';	
-		$this->phpmailer->Host = 'smtp.gmail.com';
-		$this->phpmailer->Post = 587;
-		$this->phpmailer->Username = 'kamilsitetk@gmail.com';
-		$this->phpmailer->Password = '';
-		$this->phpmailer->From = 'kamilsitetk@gmail.com';
-		$this->phpmailer->FromName = "Allegro Search Service";
+		$this->phpmailer->SMTPSecure = $this->config->item('MailSecureType');	
+		$this->phpmailer->Host = $this->config->item('MailSMTPHost');
+		$this->phpmailer->Port = $this->config->item('MailPort');
+		$this->phpmailer->Username = $this->config->item('MailSMTPLogin');
+		$this->phpmailer->Password = $this->config->item('MailSMTPPassword');
+		$this->phpmailer->From = $this->config->item('MailFrom');
+		$this->phpmailer->FromName = $this->config->item('MailFromName');
 		$this->phpmailer->Subject = $Subject;
-		$this->phpmailer->AltBody = "Konieczne wsparcie HTML";
+		$this->phpmailer->AltBody = $this->config->item('MailNoHTMLSupport');
 		$this->phpmailer->MsgHTML($BodyHtml);
 		$this->phpmailer->AddAddress($To);
 		

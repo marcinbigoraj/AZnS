@@ -5,18 +5,14 @@ class AllegroWebAPISoapClient extends SoapClient
 
 	private $APIVersion;
 	private $session;
-
-	public $config = array(
-		'url' => 'https://webapi.allegro.pl/service.php?wsdl',
-		'component' => 1, // component AllegroWebAPI
-		'country' => 228, // kod kraju, 1 - Polska, 228 - serwis testowy
-		'webapikey' => '652d6c74', // klucz API
-		'login' => 'testapipl',
-		'passwd' => 'azns2013pl'
-	);
+	public $config;
 
 	public function __construct()
-	{		
+	{
+		$ci = get_instance(); 
+		$ci->load->config('allegro_app_config');
+		$this->config = $ci->config->item('AllegroAPI');
+				
 		parent::__construct($this->config['url']);
 		
 		try

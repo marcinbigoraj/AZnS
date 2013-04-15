@@ -53,7 +53,7 @@ class Authentication extends CI_Controller
 			$this->form_validation->set_rules('registerPassword', 'Hasło', 'required|min_length[8]|max_length[20]');
 			$this->form_validation->set_rules('registerPassword2', 'Powtórne hasło', 'required|min_length[8]|max_length[20]|matches[registerPassword]');
 			$this->form_validation->set_rules('registerEmail', 'Email', 'trim|required|valid_email|is_unique[users.email]');
-			$this->form_validation->set_rules('registerPhone', 'Telefon', 'trim|required|integer|exact_length[9]');
+			$this->form_validation->set_rules('registerPhone', 'Telefon', 'trim|integer|exact_length[9]');
 			
 			if ($this->form_validation->run() != FALSE)
 			{
