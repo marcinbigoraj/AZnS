@@ -35,7 +35,23 @@
 			</tr>
 			<tr>
 				<td>
-					Kup teraz
+					Którekolwiek z szukanych słów
+				</td>
+				<td>
+					<?php echo form_checkbox('anyWord', 'true'); ?>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Szukaj również w opisach
+				</td>
+				<td>
+					<?php echo form_checkbox('includeDescription', 'true'); ?>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Szukaj tylko 'Kup teraz'
 				</td>
 				<td>
 					<?php echo form_checkbox('buyNow', 'true'); ?>

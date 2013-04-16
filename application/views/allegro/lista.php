@@ -3,7 +3,7 @@
 <table>
 	<thead>
 		<tr>
-			<th>Słowa kluczowe</th><th>Kategoria</th><th>Kup teraz</th><th>Miasto</th><th>Województwo</th><th>Minimalna cena</th><th>Maksymalna cena</th><th></th>
+			<th>Słowa kluczowe</th><th>Kategoria</th><th>Którekolwiek słowo</th><th>Szukaj w opisach</th><th>Kup teraz</th><th>Miasto</th><th>Województwo</th><th>Minimalna cena</th><th>Maksymalna cena</th><th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -18,6 +18,7 @@
 						echo "<td>".$value."</td>";
 					}
 				}
+				echo "<td><a href='".site_url("allegro/edytuj/$id")."'>Edytuj</a></td>";
 				echo "<td><a href='".site_url("allegro/usun/$id")."'>Usuń</a></td>";
 			
 			echo "</tr>";

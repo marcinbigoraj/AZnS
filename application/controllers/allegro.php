@@ -50,6 +50,8 @@ class Allegro extends CI_Controller {
 			$user_id = $this->ion_auth->user()->row()->id;
 			$keywords = $_POST['keywords'];
 			$id_cat = $_POST['id_cat'];
+			$anyWord = $_POST['anyWord'];
+			$includeDescription = $_POST['includeDescription'];
 			$buyNow = $_POST['buyNow'];
 			$city = $_POST['city'];
 			$voivodeship =$_POST['voivodeship'];
@@ -64,11 +66,29 @@ class Allegro extends CI_Controller {
 				$buyNow=0;
 			}
 			
+			if($anyWord=="true")
+			{
+				$anyWord=1;
+			}
+			else {
+				$anyWord=0;
+			}
+			
+			if($includeDescription=="true")
+			{
+				$includeDescription=1;
+			}
+			else {
+				$includeDescription=0;
+			}
+			
 			$this -> load -> database();
 			$data = array(
 			'user_id' => $user_id,
 			'keywords' => $keywords,
 			'id_cat' => $id_cat,
+			'anyWord' => $anyWord, 
+			'includeDescription' => $includeDescription,
 			'buyNow' => $buyNow,
 			'city' => $city,
 			'voivodeship' => $voivodeship,
@@ -102,5 +122,8 @@ class Allegro extends CI_Controller {
 
 	}
 
+	public function edytuj($id){
+		
+	}
 }
 ?>
