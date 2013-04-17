@@ -38,7 +38,7 @@
 |
 */
 
-$route['default_controller'] = "main";
+$route['default_controller'] = "allegro/lista";
 $route['404_override'] = '';
 
 
