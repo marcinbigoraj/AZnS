@@ -1,6 +1,8 @@
 <h1><?php echo $title; ?></h1>
 
-<?php echo form_open('allegro/zapiszWyedytowanyFiltr'); ?>
+<?php echo form_open('allegro/zapiszWyedytowanyFiltr'); 
+echo form_hidden('id', $zapisaneDane['id']);?>
+	
 	<table>
 		<tbody>
 			<tr>
@@ -39,7 +41,7 @@
 					Którekolwiek z szukanych słów
 				</td>
 				<td>
-					<?php echo form_checkbox('anyWord', ($zapisaneDane['anyWord']==1 ? true: false), ($zapisaneDane['anyWord']==1 ? true: false)); ?>
+					<?php echo form_checkbox('anyWord', 'true', $zapisaneDane['anyWord']==1 ? TRUE:FALSE); ?>
 				</td>
 			</tr>
 			<tr>
@@ -47,7 +49,7 @@
 					Szukaj również w opisach
 				</td>
 				<td>
-					<?php echo form_checkbox('includeDescription', $zapisaneDane['includeDescription']==1 ? true:false, $zapisaneDane['includeDescription']==1 ? true:false); ?>
+					<?php echo form_checkbox('includeDescription', 'true', $zapisaneDane['includeDescription']==1 ? TRUE:FALSE); ?>
 				</td>
 			</tr>
 			<tr>
@@ -55,7 +57,7 @@
 					Szukaj tylko 'Kup teraz'
 				</td>
 				<td>
-					<?php echo form_checkbox('buyNow', $zapisaneDane['buyNow']==1 ? true:false, $zapisaneDane['buyNow']==1 ? true:false); ?>
+					<?php echo form_checkbox('buyNow', 'true', $zapisaneDane['buyNow']==1 ? TRUE:FALSE); ?>
 				</td>
 			</tr>
 			<tr>

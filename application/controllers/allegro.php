@@ -141,6 +141,7 @@ class Allegro extends CI_Controller {
 		foreach($query->result() as $row)
 		{
 			$zapisaneDane = array(
+			'id'=>$id,
 			'keywords'=> $row->keywords,
 			'id_cat'=> $row->id_cat,
 			'anyWord'=> $row->anyWord,
@@ -163,10 +164,9 @@ class Allegro extends CI_Controller {
 		if (!$this -> ion_auth -> logged_in()) {
 			redirect('authentication/login');
 		}
-
+		
 		if (isset($_POST['zapiszZmiany'])) {
-
-			$user_id = $this->ion_auth->user()->row()->id;
+			$id= $_POST['id'];
 			$keywords = $_POST['keywords'];
 			$id_cat = $_POST['id_cat'];
 			$anyWord = $_POST['anyWord'];
@@ -203,8 +203,6 @@ class Allegro extends CI_Controller {
 			
 			$this -> load -> database();
 			$data = array(
-			'id'=> 2,//skąd to wziąć
-			'user_id' => $user_id,
 			'keywords' => $keywords,
 			'id_cat' => $id_cat,
 			'anyWord' => $anyWord, 
@@ -213,12 +211,12 @@ class Allegro extends CI_Controller {
 			'city' => $city,
 			'voivodeship' => $voivodeship,
 			'minPrice' => $minPrice,
-			'maxPrice' => $maxPrice,
-			'active' => 1
+			'maxPrice' => $maxPrice
 			);
-			//update
+			
+			$this->db->update('search', $data, array('id' => $id)); 
 		}
-
+		
 		redirect('allegro/lista');
 	}
 }
