@@ -15,7 +15,28 @@
 				{
 					if($key!='id')
 					{
-						echo "<td>".$value."</td>";
+						if ($key == 'anyWord' || $key == 'includeDescription' || $key == 'buyNow') 
+						{
+							$tempValue = $value == 1 ? 'tak' : 'nie';
+							echo "<td>".$tempValue."</td>";
+						}
+						else if ($key == 'city' && $value == '')
+						{
+							echo "<td>Dowolne</td>";
+						}
+						else if ($key == 'minPrice' && $value == 0)
+						{
+							echo "<td>Brak ceny minimalnej</td>";
+						}
+						else if ($key == 'maxPrice' && $value == 0)
+						{
+							echo "<td>Brak ceny maksymalnej</td>";
+						}
+						else 
+						{
+							echo "<td>".$value."</td>";
+						}
+						
 					}
 				}
 				echo "<td><a href='".site_url("allegro/edytuj/$id")."'>Edytuj</a></td>";
