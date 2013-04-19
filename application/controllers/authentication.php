@@ -50,21 +50,20 @@ class Authentication extends CI_Controller
 			'email' => $user->email,
 			'phone' => $user->phone
 		); 
-		
 		if (isset($_POST['editSend']))
 		{
-			
-			if ($this->validateRegistrationForm())
+
+			if ($this->validateEditForm($user->email, $_POST['editEmail']))
 			{
 				
 				$updateData = array(
 					'username' => $_POST['editUsername'],
 					'password' => $_POST['editPassword'],
 					'email' => $_POST['editEmail'],
-					'phone' => array('phone' => $_POST['editPhone'])	
+					'phone' => $_POST['editPhone']
 				);
 
-				if ($this->ion_auth->update_user($user->id, $data))
+				if ($this->ion_auth->update($user->id, $updateData))
 				{
 					redirect('allegro/lista');
 				}
@@ -131,6 +130,30 @@ class Authentication extends CI_Controller
 		$this->form_validation->set_rules('registerEmail', 'Email', 'trim|required|valid_email|is_unique[users.email]');
 		$this->form_validation->set_rules('registerPhone', 'Telefon', 'trim|integer|exact_length[9]');
 		
+		if ($this->form_validation->run())
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private function validateEditForm($currentEmail, $newEmail)
+	{
+			
+		$this->form_validation->set_rules('editUsername', 'Login', 'trim|required|min_length[6]|max_length[20]|xss_clean');
+		$this->form_validation->set_rules('editPassword', 'Hasło', 'required|min_length[8]|max_length[20]');
+		$this->form_validation->set_rules('editPassword2', 'Powtórne hasło', 'required|min_length[8]|max_length[20]|matches[editPassword]');
+		if ($currentEmail == $newEmail)
+		{
+			$this->form_validation->set_rules('editEmail', 'Email', 'trim|required|valid_email');
+		}
+		else 
+		{
+			$this->form_validation->set_rules('editEmail', 'Email', 'trim|required|valid_email|is_unique[users.email]');
+		}		
+		$this->form_validation->set_rules('editPhone', 'Telefon', 'trim|integer|exact_length[9]');
+
 		if ($this->form_validation->run())
 		{
 			return true;

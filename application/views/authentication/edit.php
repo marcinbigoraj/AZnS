@@ -5,38 +5,38 @@
 <?php echo $errors; ?>
 </div>
 
-<div id="registerForm" class="form">
+<div id="editForm" class="form">
 <?php
 
-	$formString = form_open('authentication/register');		
+	$formString = form_open('authentication/edit');		
 	
-	$formString .= '<div id="registerUsername">';
+	$formString .= '<div id="editUsername">';
 	$formString .= "<span>Login</span>";
-	$formString .= form_input('registerUsername', $form['username']);
+	$formString .= form_input('editUsername', $form['username']);
 	$formString .= '</div>';	
 	
-	$formString .= '<div id="registerPassword">';
+	$formString .= '<div id="editPassword">';
 	$formString .= "<span>Hasło</span>";
-	$formString .= form_password('registerPassword', '');
+	$formString .= form_password('editPassword', '');
 	$formString .= '</div>';
 	
-	$formString .= '<div id="registerPassword2">';
+	$formString .= '<div id="editPassword2">';
 	$formString .= "<span>Hasło powtórnie</span>";
-	$formString .= form_password('registerPassword2', '');
+	$formString .= form_password('editPassword2', '');
 	$formString .= '</div>';
 	
-	$formString .= '<div id="registerEmail">';
+	$formString .= '<div id="editEmail">';
 	$formString .= "<span>E-mail</span>";
-	$formString .= form_input('registerEmail', $form['email']);
+	$formString .= form_input('editEmail', $form['email']);
 	$formString .= '</div>';
 	
-	$formString .= '<div id="registerPhone">';
+	$formString .= '<div id="editPhone">';
 	$formString .= "<span>Telefon</span>";
-	$formString .= form_input('registerPhone', $form['phone']);
+	$formString .= form_input('editPhone', $form['phone']);
 	$formString .= '</div>';
 	
-	$formString .= '<div id="registerSend">';
-	$formString .= form_submit('registerSend', 'Zmień dane');
+	$formString .= '<div id="editSend">';
+	$formString .= form_submit('editSend', 'Zmień dane');
 	$formString .= '</div>';
 	
 	$formString .= form_close();
