@@ -34,6 +34,55 @@ class Authentication extends CI_Controller
 		$this->load->view('templates/footer');	
 	}
 	
+	public function edit()
+	{
+		if (!$this -> ion_auth -> logged_in()) {
+			redirect('authentication/login');
+		}
+		
+		$data['title'] = "Edycja danych";
+		$data['errors'] = '';
+		$user = $this->ion_auth->user()->row();
+		$data['form'] = array(
+			'id' => $user->id,
+			'username' => $user->username,
+			'passwd' => $user->password,
+			'email' => $user->email,
+			'phone' => $user->phone
+		); 
+		
+		if (isset($_POST['editSend']))
+		{
+			
+			if ($this->validateRegistrationForm())
+			{
+				
+				$updateData = array(
+					'username' => $_POST['editUsername'],
+					'password' => $_POST['editPassword'],
+					'email' => $_POST['editEmail'],
+					'phone' => array('phone' => $_POST['editPhone'])	
+				);
+
+				if ($this->ion_auth->update_user($user->id, $data))
+				{
+					redirect('allegro/lista');
+				}
+				else 
+				{
+					$data['errors'] = $this->ion_auth->errors();
+				}
+				
+			}
+			
+		} 
+		
+		$this->load->view('templates/header', $data);
+		$this->load->view('authentication/edit', $data);	
+		$this->load->view('templates/footer');		
+		
+	}
+	
 	public function logout()
 	{
 		$this->ion_auth->logout();
@@ -49,13 +98,7 @@ class Authentication extends CI_Controller
 		if (isset($_POST['registerSend']))
 		{
 			
-			$this->form_validation->set_rules('registerUsername', 'Login', 'trim|required|min_length[6]|max_length[20]|is_unique[users.username]|xss_clean');
-			$this->form_validation->set_rules('registerPassword', 'Hasło', 'required|min_length[8]|max_length[20]');
-			$this->form_validation->set_rules('registerPassword2', 'Powtórne hasło', 'required|min_length[8]|max_length[20]|matches[registerPassword]');
-			$this->form_validation->set_rules('registerEmail', 'Email', 'trim|required|valid_email|is_unique[users.email]');
-			$this->form_validation->set_rules('registerPhone', 'Telefon', 'trim|integer|exact_length[9]');
-			
-			if ($this->form_validation->run() != FALSE)
+			if ($this->validateRegistrationForm())
 			{
 				$username = $_POST['registerUsername'];
 				$passwd = $_POST['registerPassword'];
@@ -77,6 +120,23 @@ class Authentication extends CI_Controller
 		$this->load->view('templates/header', $data);
 		$this->load->view('authentication/register', $data);	
 		$this->load->view('templates/footer');		
+	}
+
+	private function validateRegistrationForm()
+	{
+		
+		$this->form_validation->set_rules('registerUsername', 'Login', 'trim|required|min_length[6]|max_length[20]|is_unique[users.username]|xss_clean');
+		$this->form_validation->set_rules('registerPassword', 'Hasło', 'required|min_length[8]|max_length[20]');
+		$this->form_validation->set_rules('registerPassword2', 'Powtórne hasło', 'required|min_length[8]|max_length[20]|matches[registerPassword]');
+		$this->form_validation->set_rules('registerEmail', 'Email', 'trim|required|valid_email|is_unique[users.email]');
+		$this->form_validation->set_rules('registerPhone', 'Telefon', 'trim|integer|exact_length[9]');
+		
+		if ($this->form_validation->run())
+		{
+			return true;
+		}
+		
+		return false;
 	}
 
 }

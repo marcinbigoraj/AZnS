@@ -49,7 +49,8 @@ class SearchService extends CI_Controller {
 			if ($userId != $savedUserId && $savedUserId != -1) 
 			{
 				if ($newAuctionsForUserCount > 0)
-				{		
+				{
+					echo $savedEmail;		
 					//$this->mailSender($message, $savedEmail);	
 				}
 				echo $message;
@@ -159,6 +160,7 @@ class SearchService extends CI_Controller {
 		if ($newAuctionsForUserCount > 0)
 		{		
 			//$this->mailSender($message, $savedEmail);	
+			echo $savedEmail;
 		}
 		echo $message;
 
@@ -168,6 +170,7 @@ class SearchService extends CI_Controller {
 	{
 		$Subject = "Allegro Search Service z dnia " . date("H:i:s d-m-Y"); 
 		
+		$this->phpmailer = new PHPMailer();
 		$this->phpmailer->IsSMTP();
 		$this->phpmailer->SMTPAuth = true;
 		$this->phpmailer->SMTPSecure = $this->config->item('MailSecureType');	
