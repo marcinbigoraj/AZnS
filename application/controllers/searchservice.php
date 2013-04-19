@@ -24,6 +24,7 @@ class SearchService extends CI_Controller {
 		$savedPhone = '';
 		
 		$newAuctionsForUserCount = 0;
+		$newAuctionsForFilterCount = 0;
 
 		foreach ($filterQuery->result() as $row)
 		{
@@ -46,6 +47,8 @@ class SearchService extends CI_Controller {
 			$offset = 0;
 			$limit = 100;		
 			
+			$newAuctionsForFilterCount = 0;
+			
 			if ($userId != $savedUserId && $savedUserId != -1) 
 			{
 				if ($newAuctionsForUserCount > 0)
@@ -58,24 +61,7 @@ class SearchService extends CI_Controller {
 				$message = '';
 			}
 			
-			$message .= '<h1 style="font-family:Calibri; font-size:20px; font-weight:bold; color:green; padding:10px 0 0 0; margin:0;">'.$keyword.'</h1>';
-			$message .= '<p style="font-family:Calibri; font-size:16px; padding:3px 0 10px 0; margin:0;">';
-			
-			if ($catId == 0)
-			{
-				$message .= 'Wszystkie kategorie';
-			}
-				
-			if ($buyNow != 0)
-			{
-				$message .= ' Kup teraz ';
-			}
-				
-			$message .= '</p>';
-			
 			$auctionForUserIdQuery = $this->db->query("SELECT * FROM found_auctions WHERE id_user=$userId");
-			
-			$message .= '<table style="font-family:Calibri; font-size:14px;">';
 			
 			try 
 			{
@@ -95,7 +81,28 @@ class SearchService extends CI_Controller {
 							if (!$this->isAuctionIdInArray($auctionForUserIdQuery->result(), $auction->sItId))
 							{
 								
-								$newAuctionsForUserCount++;								
+								$newAuctionsForUserCount++;		
+								$newAuctionsForFilterCount++;	
+								
+								if ($newAuctionsForFilterCount == 1)
+								{
+									$message .= '<h1 style="font-family:Calibri; font-size:20px; font-weight:bold; color:green; padding:10px 0 0 0; margin:0;">'.$keyword.'</h1>';
+									$message .= '<p style="font-family:Calibri; font-size:16px; padding:3px 0 10px 0; margin:0;">';
+									
+									if ($catId == 0)
+									{
+										$message .= 'Wszystkie kategorie';
+									}
+										
+									if ($buyNow != 0)
+									{
+										$message .= ' Kup teraz ';
+									}
+										
+									$message .= '</p>';		
+									
+									$message .= '<table style="font-family:Calibri; font-size:14px;">';
+								}					
 											
 								$message .= '<tr>';
 	
@@ -142,7 +149,10 @@ class SearchService extends CI_Controller {
 				} 
 				while ($offset < $allegroResult->searchCount);
 				
-				$message .= "</table>";
+				if ($newAuctionsForUserCount != 0)
+				{
+					$message .= "</table>";	
+				}	
 					
 				$savedUserId = $userId;	
 				$savedUsername = $username;	
