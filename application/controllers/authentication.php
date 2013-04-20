@@ -35,13 +35,15 @@ class Authentication extends CI_Controller
 	
 	public function edit()
 	{
-		if (!$this -> ion_auth -> logged_in()) {
+		if (!$this->ion_auth->logged_in()) {
 			redirect('authentication/login');
 		}
 		
 		$data['title'] = "Edycja danych";
 		$data['errors'] = '';
+		
 		$user = $this->ion_auth->user()->row();
+		
 		$data['form'] = array(
 			'id' => $user->id,
 			'username' => $user->username,
@@ -49,6 +51,7 @@ class Authentication extends CI_Controller
 			'email' => $user->email,
 			'phone' => $user->phone
 		); 
+		
 		if (isset($_POST['editSend']))
 		{
 
@@ -88,7 +91,11 @@ class Authentication extends CI_Controller
 	}
 	
 	public function register()
-	{		
+	{
+		if ($this->ion_auth->logged_in()) {
+			redirect('authentication/login');
+		}
+				
 		$data['title'] = "Rejestracja";
 		$data['errors'] = '';
 		

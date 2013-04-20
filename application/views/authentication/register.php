@@ -46,5 +46,5 @@
 	
 	?>
 
-<a href='<?php echo site_url('authentication/login'); ?>'>Wróć</a>
+<p><a href='<?php echo site_url('authentication/login'); ?>'>Wróć</a></p>
 </div>

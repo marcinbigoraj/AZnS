@@ -30,8 +30,6 @@
 	
 	?>
 	
-	<div>
-		<p><a href='<?php echo site_url('authentication/register'); ?>'>Zarejestruj konto</a></p>
-	</div>
 
+<p></p><a href='<?php echo site_url('authentication/register'); ?>'>Zarejestruj konto</a></p>
 </div>
