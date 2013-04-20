@@ -93,7 +93,7 @@ class BasicDataService extends CI_Controller
 				'id_state' => 0,
 				'name' => "Dowolne",
 			);	
-		$this->db->insert('states', $data);
+		$this->allegro_model->insertState($data);
 		
 		foreach($state->statesInfoArray->item as $item)
 		{
