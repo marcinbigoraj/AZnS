@@ -142,9 +142,9 @@ class BasicDataService extends CI_Controller
 		else{
 			$komunikat="Gratuluje! Konfiguracja zakończona powodzeniem!";
 			try{
-			$this->getListOfStates();
-			$this->getListOfCategories();
-			$this->allegro_model->insertCatVersion($this->getVersion());
+				$this->getListOfStates();
+				$this->getListOfCategories();
+				$this->allegro_model->insertCatVersion($this->getVersion());
 			}
 			catch(exception $e){
 				$komunikat="Konfiguracja zakończona niepowodzeniem";
