@@ -17,7 +17,7 @@ class SearchService extends CI_Controller {
 			INNER JOIN users u ON u.id = s.user_id
 			LEFT JOIN categories c ON c.id_cat = s.id_cat
 			LEFT JOIN states st ON st.id_state = s.voivodeship
-			WHERE s.active = 1
+			WHERE s.active = 1 AND s.blocked = 0
 			ORDER BY s.user_id, id DESC
 		");
 
@@ -56,7 +56,7 @@ class SearchService extends CI_Controller {
 			if ($stateName == null || $catName == null)
 			{
 				log_message('error', 'filter is not active, category or state changed');
-				$this->db->query("UPDATE search SET active = 0 WHERE id = $filterId");
+				$this->db->query("UPDATE search SET blocked = 1 WHERE id = $filterId");
 				break;
 			}
 

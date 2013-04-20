@@ -9,7 +9,15 @@
 	<tbody>
 		<?php
 		foreach ($list as $row) {
-			echo "<tr>";
+			
+			if ($row->blocked == 1) 
+			{
+				echo '<tr style="color:red;">';
+			}
+			else 
+			{
+				echo "<tr>";
+			}
 				$id = $row->id;
 				foreach($row as $key => $value)
 				{
@@ -32,7 +40,7 @@
 						{
 							echo "<td>Brak ceny maksymalnej</td>";
 						}
-						else 
+						else if ($key != 'blocked')
 						{
 							echo "<td>".$value."</td>";
 						}
