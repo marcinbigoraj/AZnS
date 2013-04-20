@@ -16,9 +16,6 @@ class BasicDataService extends CI_Controller
 		$elementy=$this->getCategoriesArray();
 		
 		$this->insertCategoriesToDB($elementy);
-		
-		$currentVersion = $this->allegro_model->getCurrentVersion();
-		$this->allegro_model->insertCatVersion($currentVersion);
 	}
 	
 	private function getCategoriesArray()
