@@ -7,17 +7,33 @@ class A extends CI_Controller {
 	}
 
 	public function clearAuctions() {
-		$this -> db -> query("DELETE FROM found_auctions");
+		if (!$this -> ion_auth -> logged_in()) {
+			redirect('authentication/login');
+		}
+		
+		$this->allegro_model->clearAuctions();
+		if (!$this -> ion_auth -> logged_in()) {
+			redirect('authentication/login');
+		}
+		
 		redirect('allegro/lista');
 	}
 
-	public function clearCategories() {		
-		$this->db->query("DELETE FROM categories");
+	public function clearCategories() {
+		if (!$this -> ion_auth -> logged_in()) {
+			redirect('authentication/login');
+		}
+				
+		$this->allegro_model->clearCategories();
 		redirect('allegro/lista');		
 	}
 	
 	public function clearStates() {
-		$this->db->query("DELETE FROM states");
+		if (!$this -> ion_auth -> logged_in()) {
+			redirect('authentication/login');
+		}
+		
+		$this->allegro_model->clearStates();
 		redirect('allegro/lista');
 	}
 }

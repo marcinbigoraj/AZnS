@@ -104,7 +104,7 @@ class BasicDataService extends CI_Controller
 				'name' => $item->stateName,
 			);
 			
-			$this->db->insert('states', $data);
+			$this->allegro_model->insertState($data);
 		}
 	}
 	

@@ -10,16 +10,6 @@ class SearchService extends CI_Controller {
 		
 		$this->load->library('allegrowebapisoapclient');	
 		$this->load->library('phpmailer/phpmailer');	
-		
-		$filterQuery = $this->db->query("
-			SELECT u.username, u.email, u.phone, s.*, c.name as c_name, st.name as st_name
-			FROM search s
-			INNER JOIN users u ON u.id = s.user_id
-			LEFT JOIN categories c ON c.id_cat = s.id_cat
-			LEFT JOIN states st ON st.id_state = s.voivodeship
-			WHERE s.active = 1 AND s.blocked = 0
-			ORDER BY s.user_id, id DESC
-		");
 
 		$message = '';
 		$savedUserId = -1;
@@ -30,7 +20,7 @@ class SearchService extends CI_Controller {
 		$newAuctionsForUserCount = 0;
 		$newAuctionsForFilterCount = 0;
 
-		foreach ($filterQuery->result() as $row)
+		foreach ($this->allegro_model->getFiltersToSearchService() as $row)
 		{
 			
 			$userId = $row->user_id;
@@ -56,7 +46,7 @@ class SearchService extends CI_Controller {
 			if ($stateName == null || $catName == null)
 			{
 				log_message('error', 'filter is not active, category or state changed');
-				$this->db->query("UPDATE search SET blocked = 1 WHERE id = $filterId");
+				$this->allegro_model->setFilterBlocked(1, $filterId);
 				break;
 			}
 
@@ -77,7 +67,7 @@ class SearchService extends CI_Controller {
 				$message = '';
 			}
 			
-			$auctionForUserIdQuery = $this->db->query("SELECT * FROM found_auctions WHERE id_user=$userId");
+			$auctionForUserIdQuery = $this->allegro_model->getAuctionsForUserQuery($userId);
 			
 			try 
 			{

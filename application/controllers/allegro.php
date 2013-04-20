@@ -11,7 +11,6 @@ class Allegro extends CI_Controller {
 			redirect('authentication/login');
 		}
 
-		$this -> load -> model('allegro_model');
 		$data['title'] = "Lista filtrów";
 		$data['list'] = $this -> allegro_model -> createList();
 
@@ -27,14 +26,13 @@ class Allegro extends CI_Controller {
 		}
 
 		$data['title'] = "Dodaj filtr";
-		$query= $this -> db -> query("SELECT * FROM states");
 		$data['wojewodztwa'] = array();
-		foreach($query->result() as $row)
+		foreach($this->allegro_model->getStates() as $row)
 		{
 			$data['wojewodztwa'][$row->id_state]=$row->name;
 		}
 		
-		$data['kategorie'] = $this -> db -> query("SELECT * FROM categories ORDER BY sort") -> result();
+		$data['kategorie'] = $this->allegro_model->getCategories();
 		$this -> load -> view('templates/header', $data);
 		$this -> load -> view('allegro/dodajFiltr', $data);
 		$this -> load -> view('templates/footer');
@@ -102,7 +100,7 @@ class Allegro extends CI_Controller {
 				'maxPrice' => $maxPrice,
 				'active' => 1
 				);
-				$this -> db -> insert('search', $data);
+				$this->allegro_model->addFilter($data);
 			}
 	
 			redirect('allegro/lista');
@@ -116,15 +114,10 @@ class Allegro extends CI_Controller {
 			redirect('authentication/login');
 		}
 	
-		$query = $this -> db -> query("SELECT user_id FROM search WHERE id=$id");
-		foreach($query->result() as $row)
-		{
-			$userIdFromDatabase = $row -> user_id;
-		}
 		$currentUserId = $this->ion_auth->user()->row()->id;
-		if($userIdFromDatabase==$currentUserId)
+		if($this->allegro_model->getUserIdFromFilterId($id) == $currentUserId)
 		{
-			$this -> db -> query("UPDATE search SET active=0 WHERE id=$id");
+			$this->allegro_model->setFilterActive(0, $id);
 		}
 		redirect('allegro/lista');
 
@@ -135,18 +128,15 @@ class Allegro extends CI_Controller {
 			redirect('authentication/login');
 		}
 		$data['title'] = "Edytuj filtr";
-		$query= $this -> db -> query("SELECT * FROM states");
 		$data['wojewodztwa'] = array();
-		foreach($query->result() as $row)
+		foreach($this->allegro_model->getStates() as $row)
 		{
 			$data['wojewodztwa'][$row->id_state]=$row->name;
 		}
 		
-		$data['kategorie'] = $this -> db -> query("SELECT * FROM categories ORDER BY sort") -> result();
+		$data['kategorie'] = $this->allegro_model->getCategories();
 		
-		$query = $this -> db -> query("SELECT * FROM search WHERE id=$id");	
-		
-		foreach($query->result() as $row)
+		foreach($this->allegro_model->getFilterById($id) as $row)
 		{
 			$minPrice = $row->minPrice;
 			if ($minPrice == 0)
@@ -240,7 +230,7 @@ class Allegro extends CI_Controller {
 				'maxPrice' => $maxPrice
 				);
 				
-				$this->db->update('search', $data, array('id' => $id)); 
+				$this->allegro_model->updateFilter($data, $id);
 			}
 			
 			redirect('allegro/lista');
