@@ -25,7 +25,7 @@ class Authentication extends CI_Controller
 		
 		if ($this->ion_auth->logged_in())
 		{	
-			redirect('allegro/lista');
+			redirect('allegro/filtersList');
 		}
 		
 		$this->load->view('templates/header', $data);
@@ -67,7 +67,7 @@ class Authentication extends CI_Controller
 
 				if ($this->ion_auth->update($user->id, $updateData))
 				{
-					redirect('allegro/lista');
+					redirect('allegro/filtersList');
 				}
 				else 
 				{
@@ -111,7 +111,7 @@ class Authentication extends CI_Controller
 				
 				if ($this->ion_auth->register($username, $passwd, $email, $phone))
 				{
-					redirect('allegro/lista');					
+					redirect('allegro/filtersList');					
 				}
 				else 
 				{

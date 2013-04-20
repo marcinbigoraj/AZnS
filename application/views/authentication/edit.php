@@ -45,5 +45,5 @@
 
 ?>
 
-<p></p><a href='<?php echo site_url('allegro/lista'); ?>'>Wróć</a></p>
+<p></p><a href='<?php echo site_url('allegro/filtersList'); ?>'>Wróć</a></p>
 </div>

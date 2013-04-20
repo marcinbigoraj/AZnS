@@ -6,7 +6,7 @@
 
 <div id="addFilterForm" class="form">
 	
-<?php echo form_open('allegro/dodajFiltr'); ?>
+<?php echo form_open('allegro/addFilter'); ?>
 	<table>
 		<tbody>
 			<tr>
@@ -24,27 +24,27 @@
 				<td>
 					<select name="id_cat">
 						<?php 
-							foreach($kategorie as $kategoria )
+							foreach($categories as $category)
 							{
 								
 								$nazwa = "";
-								for($i=0; $i<$kategoria->depth; $i++)
+								for($i = 0; $i < $category -> depth; $i++)
 								{
-									$nazwa.="---";
+									$nazwa .= "---";
 								}
-								$nazwa.=$kategoria->name;
+								$nazwa .= $category -> name;
 								
-								if (isset($_POST['id_cat']) && ($_POST['id_cat'] == $kategoria->id_cat))
+								if (isset($_POST['id_cat']) && ($_POST['id_cat'] == $category -> id_cat))
 								{									
-									echo '<option value="'.$kategoria->id_cat.'" selected="selected">'.$nazwa.'</option>';
+									echo '<option value="'.$category -> id_cat.'" selected="selected">'.$nazwa.'</option>';
 								}
 								else 
 								{
-									echo '<option value="'.$kategoria->id_cat.'">'.$nazwa.'</option>';
+									echo '<option value="'.$category -> id_cat.'">'.$nazwa.'</option>';
 								}
 								
 							}
-							?>
+						?>
 					</select>
 					
 				</td>
@@ -86,7 +86,7 @@
 					Województwo
 				</td>
 				<td>
-					<?php echo form_dropdown('voivodeship', $wojewodztwa, isset($_POST['voivodeship']) ? $_POST['voivodeship'] : ''); ?>
+					<?php echo form_dropdown('voivodeship', $states, isset($_POST['voivodeship']) ? $_POST['voivodeship'] : ''); ?>
 				</td>
 			</tr>
 			<tr>
@@ -107,7 +107,7 @@
 			</tr>
 			<tr>
 				<td>
-					<?php echo form_submit('dodajFiltr', 'Dodaj Filtr'); ?>
+					<?php echo form_submit('addFilter', 'Dodaj Filtr'); ?>
 				</td>
 				<td></td>
 			</tr>
@@ -115,5 +115,5 @@
 	</table>
 <?php echo form_close(); ?>
 
-<a href='<?php echo site_url('allegro/lista'); ?>'>Wróć</a>
+<p><a href='<?php echo site_url('allegro/filtersList'); ?>'>Wróć</a></p>
 </div>

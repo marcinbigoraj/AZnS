@@ -1,5 +1,7 @@
 <h1><?php echo $title; ?></h1>
 
+<div id="main_table">
+	
 <table>
 	<thead>
 		<tr>
@@ -10,7 +12,7 @@
 		<?php
 		foreach ($list as $row) {
 			
-			if ($row->blocked == 1) 
+			if ($row -> blocked == 1) 
 			{
 				echo '<tr style="color:red;">';
 			}
@@ -18,7 +20,7 @@
 			{
 				echo "<tr>";
 			}
-				$id = $row->id;
+				$id = $row -> id;
 				foreach($row as $key => $value)
 				{
 					if($key!='id' && $key != 'blocked')
@@ -47,12 +49,14 @@
 						
 					}
 				}
-				echo "<td><a href='".site_url("allegro/edytuj/$id")."'>Edytuj</a></td>";
-				echo "<td><a href='".site_url("allegro/usun/$id")."'>Usuń</a></td>";
+				echo "<td><a href='".site_url("allegro/editFilter/$id")."'>Edytuj</a></td>";
+				echo "<td><a href='".site_url("allegro/deleteFilter/$id")."'>Usuń</a></td>";
 			
 			echo "</tr>";
 		}
 		?>
 	</tbody>
 </table>
-<a href='<?php echo site_url('allegro/dodajFiltr'); ?>'>Dodaj filtr</a>
+
+<p><a href='<?php echo site_url('allegro/addFilter'); ?>'>Dodaj filtr</a></p>
+</div>

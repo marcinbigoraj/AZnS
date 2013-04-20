@@ -9,11 +9,16 @@ class Allegro_model extends CI_Model {
 	public function createList() 
 	{
 		
-		$query = $this -> db -> query('SELECT id, keywords, c.name AS "categoryName", anyWord, includeDescription, buyNow, city, s.name AS "stateName", minPrice, maxPrice, blocked FROM search se
-		LEFT JOIN states s ON voivodeship=id_state 
-		LEFT JOIN categories c ON se.id_cat=c.id_cat WHERE active=1 AND user_id = '.$this->ion_auth->user()->row()->id);
+		$query = $this -> db -> query('
+			SELECT id, keywords, c.name AS "categoryName", anyWord, includeDescription, buyNow, city, s.name AS "stateName", minPrice, maxPrice, blocked 
+			FROM search se
+			LEFT JOIN states s ON voivodeship=id_state 
+			LEFT JOIN categories c ON se.id_cat=c.id_cat 
+			WHERE active=1 AND user_id = '.$this -> ion_auth -> user() -> row() -> id.' 
+			ORDER BY id DESC'
+		);
 		
-		return $query->result();
+		return $query -> result();
 	}
 	
 	public function clearAuctions()
@@ -23,47 +28,47 @@ class Allegro_model extends CI_Model {
 	
 	public function clearCategories() 
 	{		
-		$this->db->query("DELETE FROM categories");
+		$this -> db -> query("DELETE FROM categories");
 	}
 	
 	public function clearStates() 
 	{
-		$this->db->query("DELETE FROM states");
+		$this -> db -> query("DELETE FROM states");
 	}
 	
 	public function getStates()
 	{
 		$query = $this -> db -> query("SELECT * FROM states");
-		return $query->result();
+		return $query -> result();
 	}
 	
 	public function insertState($data)
 	{
-		$this->db->insert('states', $data);
+		$this -> db -> insert('states', $data);
 	}
 	
 	public function getCategories()
 	{
-		$query = $this->db->query("SELECT * FROM categories ORDER BY sort");
-		return $query->result();
+		$query = $this -> db -> query("SELECT * FROM categories ORDER BY sort");
+		return $query -> result();
 	}
 	
 	public function addFilter($data)
 	{
-		$this->db->insert('search', $data);
+		$this -> db -> insert('search', $data);
 	}
 	
 	public function updateFilter($data, $filterId)
 	{
-		$this->db->update('search', $data, array('id' => $filterId)); 	
+		$this -> db -> update('search', $data, array('id' => $filterId)); 	
 	}
 	
 	public function getUserIdFromFilterId($filterId)
 	{
-		$query = $this->db->query("SELECT user_id FROM search WHERE id=$filterId");
-		foreach($query->result() as $row)
+		$query = $this -> db -> query("SELECT user_id FROM search WHERE id=$filterId");
+		foreach($query -> result() as $row)
 		{
-			$userIdFromDatabase = $row->user_id;
+			$userIdFromDatabase = $row -> user_id;
 			return $userIdFromDatabase;
 		}
 		
@@ -72,23 +77,23 @@ class Allegro_model extends CI_Model {
 	
 	public function setFilterActive($active, $filterId)
 	{
-		$this->db->query("UPDATE search SET active=$active WHERE id=$filterId");
+		$this -> db -> query("UPDATE search SET active=$active WHERE id=$filterId");
 	}
 	
 	public function setFilterBlocked($blocked, $filterId)
 	{
-		$this->db->query("UPDATE search SET blocked = $blocked WHERE id = $filterId");
+		$this -> db -> query("UPDATE search SET blocked = $blocked WHERE id = $filterId");
 	}
 	
 	public function getFilterById($filterId) 
 	{
-		$query = $this->db->query("SELECT * FROM search WHERE id=$filterId");
-		return $query->result();	
+		$query = $this -> db -> query("SELECT * FROM search WHERE id=$filterId");
+		return $query -> result();	
 	}
 	
 	public function getFiltersToSearchService()
 	{
-		$filterQuery = $this->db->query("
+		$filterQuery = $this -> db -> query("
 			SELECT u.username, u.email, u.phone, s.*, c.name as c_name, st.name as st_name
 			FROM search s
 			INNER JOIN users u ON u.id = s.user_id
@@ -98,55 +103,66 @@ class Allegro_model extends CI_Model {
 			ORDER BY s.user_id, id DESC
 		");
 		
-		return $filterQuery->result();
+		return $filterQuery -> result();
 	}
 	
 	public function getAuctionsForUserQuery($userId)
 	{
-		return $this->db->query("SELECT * FROM found_auctions WHERE id_user=$userId");
+		return $this -> db -> query("SELECT * FROM found_auctions WHERE id_user=$userId");
 	}
 
 	public function getVersionFromDB()
 	{
-		$this->db->select('ver_number');
-		$this->db->where('name', 'kategorie'); 
-		$query = $this->db->get('version');
-		return $query->row()->ver_number;
+		$this -> db -> select('ver_number');
+		$this -> db -> where('name', 'kategorie'); 
+		$query = $this -> db -> get('version');
+		return $query -> row() -> ver_number;
 	}
 	
-	public function updateDBVersion($vers){
+	public function updateDBVersion($vers)
+	{
 		$data = array(
-               'ver_number' => $vers
-            );
+			'ver_number' => $vers
+		);
 
-		$this->db->where('name', 'kategorie'); 
-		$this->db->update('version', $data); 
+		$this -> db -> where('name', 'kategorie'); 
+		$this -> db -> update('version', $data); 
 	}
 	
-	public function insertCatVersion($ver){
+	public function insertCatVersion($ver)
+	{
 		$data= array(
-			'name'=> 'kategorie',
-			'ver_number'=>$ver
-		);
+			'name' => 'kategorie',
+			'ver_number' => $ver
+		); 
 		
-		$this->db->insert('version', $data);
+		$this -> db -> insert('version', $data);
 	}
 	
 	public function getCurrentVersion()
 	{
-		$this->load->library('allegrowebapisoapclient');
-		$version = $this->allegrowebapisoapclient->getCategoriesVersion();
-		$country= $this->allegrowebapisoapclient->getCountryId();
-		foreach ($version->sysCountryStatus->item as $item) {
-			if($item->countryId==$country){
+		
+		$this -> load -> library('allegrowebapisoapclient');
+		$version = $this -> allegrowebapisoapclient -> getCategoriesVersion();
+		$country= $this -> allegrowebapisoapclient -> getCountryId();
+		
+		foreach ($version -> sysCountryStatus -> item as $item) 
+		{
+			
+			if($item -> countryId == $country)
+			{
 				$data= array(
-				'id_country'=> $item->countryId,
-				'cat_version'=> $item->catsVersion);
+					'id_country' => $item -> countryId,
+					'cat_version' => $item -> catsVersion
+				);
 				break;
 			}
+			
 		}
+		
 		$currentVersion = $data['cat_version'];
 		return $currentVersion;
 	}
 }
+
 ?>
