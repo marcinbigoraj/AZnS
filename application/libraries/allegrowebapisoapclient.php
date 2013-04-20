@@ -10,65 +10,65 @@ class AllegroWebAPISoapClient extends SoapClient
 	public function __construct()
 	{
 		$ci = get_instance(); 
-		$this->config = $ci->config->item('AllegroAPI');
+		$this -> config = $ci -> config -> item('AllegroAPI');
 				
-		parent::__construct($this->config['url']);
+		parent::__construct($this -> config['url']);
 		
 		try
 		{
 			$doQuerySysStatus_request = array(
-			   'sysvar' => $this->config['component'],
-			   'countryId' => $this->config['country'],
-			   'webapiKey' => $this->config['webapikey']
+			   'sysvar' => $this -> config['component'],
+			   'countryId' => $this -> config['country'],
+			   'webapiKey' => $this -> config['webapikey']
 			);
-			$this->APIVersion = $this->doQuerySysStatus($doQuerySysStatus_request);
-			$this->login();			
+			$this -> APIVersion = $this -> doQuerySysStatus($doQuerySysStatus_request);
+			$this -> login();			
 		}
 		catch(SoapFault $error)
 		{
-			log_message('error', "SoapClient initialize error: " . $error->faultcode . ', ' . $error->faultstring);
+			log_message('error', "SoapClient initialize error: " . $error -> faultcode . ', ' . $error -> faultstring);
 		}
 	}
 	
 	public function login() 
 	{		
 		// w przypadku aktywnej sesjji nie jest tworzona nowa
-		if ($this->session != null) 
+		if ($this -> session != null) 
 		{
-			$this->session->getAllegroFormatSessionInfo();
+			$this -> session -> getAllegroFormatSessionInfo();
 		} 
 		else 
 		{
 			$doLoginEnc_request = array(
-				'userLogin' => $this->config['login'],
-			   	'userHashPassword' => base64_encode(hash('sha256', $this->config['passwd'], true)),
-			   	'countryCode' => $this->config['country'],
-			   	'webapiKey' => $this->config['webapikey'],
-			   	'localVersion' => $this->APIVersion->verKey
+				'userLogin' => $this -> config['login'],
+			   	'userHashPassword' => base64_encode(hash('sha256', $this -> config['passwd'], true)),
+			   	'countryCode' => $this -> config['country'],
+			   	'webapiKey' => $this -> config['webapikey'],
+			   	'localVersion' => $this -> APIVersion -> verKey
 			);	
-			$this->session = $this->doLoginEnc($doLoginEnc_request);
+			$this -> session = $this -> doLoginEnc($doLoginEnc_request);
 		}
 		
-		return $this->session;
+		return $this -> session;
 	}
 	
 	public function getMainCategories() 
 	{
 		$doGetCatsData_request = array(
-		   'countryId' => $this->config['country'],
+		   'countryId' => $this -> config['country'],
 		   'localVersion' => 0,
-		   'webapiKey' => $this->config['webapikey']
+		   'webapiKey' => $this -> config['webapikey']
 		);
-		return $this->doGetCatsData($doGetCatsData_request);
+		return $this -> doGetCatsData($doGetCatsData_request);
 	}
 	
 	public function getStates() 
 	{
 		$doGetStatesInfo_request = array(
-			'countryCode' => $this->config['country'],
-   			'webapiKey' => $this->config['webapikey']
+			'countryCode' => $this -> config['country'],
+   			'webapiKey' => $this -> config['webapikey']
 		);
-		return $this->doGetStatesInfo($doGetStatesInfo_request);
+		return $this -> doGetStatesInfo($doGetStatesInfo_request);
 	}
 	
 	public function searchAuction($keyword, $catId, $anyWord, $includeDesc, $buyNow, $city, $state, $minPrice, $maxPrice, $offset, $limit)
@@ -90,7 +90,7 @@ class AllegroWebAPISoapClient extends SoapClient
 			$searchOptions += 8; // tylko kup teraz
 		}
 		
-		$sessionHandle = $this->session->sessionHandlePart;	
+		$sessionHandle = $this -> session -> sessionHandlePart;	
 				
 		$doSearch_request = array(
 			'sessionHandle' => $sessionHandle,
@@ -107,20 +107,23 @@ class AllegroWebAPISoapClient extends SoapClient
 			)
 		);	
 		
-		return $this->doSearch($doSearch_request);		
+		return $this -> doSearch($doSearch_request);		
 	}
 
-	public function getCategoriesVersion(){
+	public function getCategoriesVersion()
+	{
 		$doGetStatesInfo_request = array(
-			'countryId' => $this->config['country'],
-   			'webapiKey' => $this->config['webapikey']
+			'countryId' => $this -> config['country'],
+   			'webapiKey' => $this -> config['webapikey']
 		);
-		return $this->doQueryAllSysStatus($doGetStatesInfo_request);
+		return $this -> doQueryAllSysStatus($doGetStatesInfo_request);
 	}
 	
-	public function getCountryId(){
-		return $this->config['country'];
+	public function getCountryId()
+	{
+		return $this -> config['country'];
 	}
+	
 }
 
 ?>

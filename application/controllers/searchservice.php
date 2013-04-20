@@ -162,7 +162,7 @@ class SearchService extends CI_Controller {
 							
 							$message .= '</tr>';		
 								
-							$this->allegro_model->addSendedAuction($userId, $auction -> sItId);
+							$this -> allegro_model -> addSendedAuction($userId, $auction -> sItId);
 														
 						}
 
