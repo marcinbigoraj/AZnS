@@ -145,7 +145,7 @@ class BasicDataService extends CI_Controller
 				$komunikat = "Konfiguracja zakończona niepowodzeniem";
 			}
 			
-			echo $komunikat;						
+			echo '<p>'.$komunikat.'</p>';						
 		}
 		
 	}
