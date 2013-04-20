@@ -1,8 +1,12 @@
 <h1><?php echo $title; ?></h1>
 
+<div id="errorsContainer">
+<?php echo validation_errors(); ?>
+</div>
+
 <div id="addFilterForm" class="form">
 	
-<?php echo form_open('allegro/zapiszFiltr'); ?>
+<?php echo form_open('allegro/dodajFiltr'); ?>
 	<table>
 		<tbody>
 			<tr>
@@ -10,7 +14,7 @@
 					Słowa kluczowe
 				</td>
 				<td>
-					<?php echo form_input('keywords', ''); ?>
+					<?php echo form_input('keywords', isset($_POST['keywords']) ? $_POST['keywords'] : '' ); ?>
 				</td>
 			</tr>
 			<tr>
@@ -22,13 +26,23 @@
 						<?php 
 							foreach($kategorie as $kategoria )
 							{
+								
 								$nazwa = "";
 								for($i=0; $i<$kategoria->depth; $i++)
 								{
 									$nazwa.="---";
 								}
 								$nazwa.=$kategoria->name;
-								echo "<option value='".$kategoria->id_cat."'>$nazwa</option>";
+								
+								if (isset($_POST['id_cat']) && ($_POST['id_cat'] == $kategoria->id_cat))
+								{									
+									echo '<option value="'.$kategoria->id_cat.'" selected="selected">'.$nazwa.'</option>';
+								}
+								else 
+								{
+									echo '<option value="'.$kategoria->id_cat.'">'.$nazwa.'</option>';
+								}
+								
 							}
 							?>
 					</select>
@@ -40,7 +54,7 @@
 					Którekolwiek z szukanych słów
 				</td>
 				<td>
-					<?php echo form_checkbox('anyWord', 'true'); ?>
+					<?php echo form_checkbox('anyWord', 'true', isset($_POST['anyWord']) ? $_POST['anyWord'] : FALSE); ?>
 				</td>
 			</tr>
 			<tr>
@@ -48,7 +62,7 @@
 					Szukaj również w opisach
 				</td>
 				<td>
-					<?php echo form_checkbox('includeDescription', 'true'); ?>
+					<?php echo form_checkbox('includeDescription', 'true', isset($_POST['includeDescription']) ? $_POST['includeDescription'] : FALSE); ?>
 				</td>
 			</tr>
 			<tr>
@@ -56,7 +70,7 @@
 					Szukaj tylko 'Kup teraz'
 				</td>
 				<td>
-					<?php echo form_checkbox('buyNow', 'true'); ?>
+					<?php echo form_checkbox('buyNow', 'true', isset($_POST['buyNow']) ? $_POST['buyNow'] : FALSE); ?>
 				</td>
 			</tr>
 			<tr>
@@ -64,7 +78,7 @@
 					Miasto
 				</td>
 				<td>
-					<?php echo form_input('city', ''); ?>
+					<?php echo form_input('city', isset($_POST['city']) ? $_POST['city'] : ''); ?>
 				</td>
 			</tr>
 			<tr>
@@ -72,7 +86,7 @@
 					Województwo
 				</td>
 				<td>
-					<?php echo form_dropdown('voivodeship', $wojewodztwa); ?>
+					<?php echo form_dropdown('voivodeship', $wojewodztwa, isset($_POST['voivodeship']) ? $_POST['voivodeship'] : ''); ?>
 				</td>
 			</tr>
 			<tr>
@@ -80,7 +94,7 @@
 					Minimalna cena
 				</td>
 				<td>
-					<?php echo form_input('minPrice', ''); ?>
+					<?php echo form_input('minPrice', isset($_POST['minPrice']) ? $_POST['minPrice'] : ''); ?>
 				</td>
 			</tr>
 			<tr>
@@ -88,7 +102,7 @@
 					Maksymalna cena
 				</td>
 				<td>
-					<?php echo form_input('maxPrice', ''); ?>
+					<?php echo form_input('maxPrice', isset($_POST['maxPrice']) ? $_POST['maxPrice'] : ''); ?>
 				</td>
 			</tr>
 			<tr>

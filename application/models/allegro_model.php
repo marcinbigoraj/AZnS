@@ -10,8 +10,8 @@ class Allegro_model extends CI_Model {
 	{
 		
 		$query = $this -> db -> query('SELECT id, keywords, c.name AS "categoryName", anyWord, includeDescription, buyNow, city, s.name AS "stateName", minPrice, maxPrice, blocked FROM search se
-		INNER JOIN states s ON voivodeship=id_state 
-		INNER JOIN categories c ON se.id_cat=c.id_cat WHERE active=1 AND user_id = '.$this->ion_auth->user()->row()->id);
+		LEFT JOIN states s ON voivodeship=id_state 
+		LEFT JOIN categories c ON se.id_cat=c.id_cat WHERE active=1 AND user_id = '.$this->ion_auth->user()->row()->id);
 		
 		return $query->result();
 	}

@@ -21,7 +21,7 @@
 				$id = $row->id;
 				foreach($row as $key => $value)
 				{
-					if($key!='id')
+					if($key!='id' && $key != 'blocked')
 					{
 						if ($key == 'anyWord' || $key == 'includeDescription' || $key == 'buyNow') 
 						{
@@ -40,7 +40,7 @@
 						{
 							echo "<td>Brak ceny maksymalnej</td>";
 						}
-						else if ($key != 'blocked')
+						else
 						{
 							echo "<td>".$value."</td>";
 						}

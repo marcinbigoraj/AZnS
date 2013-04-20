@@ -1,7 +1,12 @@
 <h1><?php echo $title; ?></h1>
 
-<?php echo form_open('allegro/zapiszWyedytowanyFiltr'); 
-echo form_hidden('id', $zapisaneDane['id']);?>
+<div id="errorsContainer">
+<?php echo validation_errors(); ?>
+</div>
+
+<div id="editFilterForm" class="form">
+
+<?php echo form_open("allegro/edytuj/".$zapisaneDane['id']); ?>
 	
 	<table>
 		<tbody>
@@ -101,4 +106,6 @@ echo form_hidden('id', $zapisaneDane['id']);?>
 		</tbody>
 	</table>
 <?php echo form_close(); ?>
+
 <a href='<?php echo site_url('allegro/lista'); ?>'>Wróć</a>
+</div>
