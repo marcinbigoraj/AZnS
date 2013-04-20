@@ -65,121 +65,112 @@ class SearchService extends CI_Controller {
 			try 
 			{
 				
-				do 
-				{
-
-					$allegroResult = $this->allegrowebapisoapclient->searchAuction($keyword, $catId, $anyWord, $includeDesc, 
-						$buyNow, $city, $state, $minPrice, $maxPrice, $offset, $limit);
+				$allegroResult = $this->allegrowebapisoapclient->searchAuction($keyword, $catId, $anyWord, $includeDesc, 
+					$buyNow, $city, $state, $minPrice, $maxPrice, $offset, $limit);
+				
+				if ($allegroResult->searchCount != 0) 
+				{							
 					
-					if ($allegroResult->searchCount != 0) 
-					{							
-						
-						foreach ($allegroResult->searchArray->item as $auction) 
+					foreach ($allegroResult->searchArray->item as $auction) 
+					{
+
+						if (!$this->isAuctionIdInArray($auctionForUserIdQuery->result(), $auction->sItId))
 						{
-
-							if (!$this->isAuctionIdInArray($auctionForUserIdQuery->result(), $auction->sItId))
+							
+							$newAuctionsForUserCount++;		
+							$newAuctionsForFilterCount++;	
+							
+							if ($newAuctionsForFilterCount == 1)
 							{
+								$message .= '<h1 style="font-family:Calibri; font-size:20px; font-weight:bold; color:green; padding:10px 0 0 0; margin:0;">'.$keyword.'</h1>';
+								$message .= '<p style="font-family:Calibri; font-size:16px; padding:3px 0 10px 0; margin:0;">';
 								
-								$newAuctionsForUserCount++;		
-								$newAuctionsForFilterCount++;	
+								$message .= 'Kategoria: ' . $catName;
 								
-								if ($newAuctionsForFilterCount == 1)
+								if($anyWord == 1) 
 								{
-									$message .= '<h1 style="font-family:Calibri; font-size:20px; font-weight:bold; color:green; padding:10px 0 0 0; margin:0;">'.$keyword.'</h1>';
-									$message .= '<p style="font-family:Calibri; font-size:16px; padding:3px 0 10px 0; margin:0;">';
-									
-									$message .= 'Kategoria: ' . $catName;
-									
-									if($anyWord == 1) 
-									{
-										$message .= " | Którekolwiek słowo";
-									}
-									
-									if($includeDesc == 1)
-									{
-										$message .= " | Szukaj w opisach";
-									}
+									$message .= " | Którekolwiek słowo";
+								}
+								
+								if($includeDesc == 1)
+								{
+									$message .= " | Szukaj w opisach";
+								}
 
-									if ($buyNow == 1)
-									{
-										$message .= ' | Kup teraz';
-									}
-									
-									if ($city != '')
-									{
-										$message .= ' | Miasto: ' . $city;
-									}
-									
-									$message .= " | Region: " . $stateName;
-									
-									if ($minPrice == 0)
-									{
-										$message .= " | Brak ceny minimalnej";
-									}
-									else 
-									{
-										$message .= " | Cena minimalna: " . $minPrice;
-									}
-									
-									if ($maxPrice == 0)
-									{
-										$message .= " | Brak ceny maksymalnej";
-									}
-									else 
-									{
-										$message .= " | Cena maksymalna: " . $maxPrice;
-									}								
-										
-									$message .= '</p>';		
-									
-									$message .= '<table style="font-family:Calibri; font-size:14px;">';
-								}					
-											
-								$message .= '<tr>';
-	
-								if ($auction->sItThumb == 1) 
+								if ($buyNow == 1)
 								{
-									$message .= '<td rowspan="2"><img src="' . $auction->sItThumbUrl . '" alt="' . $auction->sItName . '" style="width:100px; height:auto;" /></td>';
-								} 
+									$message .= ' | Kup teraz';
+								}
+								
+								if ($city != '')
+								{
+									$message .= ' | Miasto: ' . $city;
+								}
+								
+								$message .= " | Region: " . $stateName;
+								
+								if ($minPrice == 0)
+								{
+									$message .= " | Brak ceny minimalnej";
+								}
 								else 
 								{
-									$message .= '<td rowspan="2"><img src="http://static.allegrostatic.pl/site_images/1/0/layout/showItemNoPhoto.png" alt="Brak zdjęcia" style="width:100px; height:auto;" /></td>';
+									$message .= " | Cena minimalna: " . $minPrice;
 								}
-				
-								$message .= '<td style="width:500px;"><a href="http://testwebapi.pl/show_item.php?item='.$auction->sItId.'" style="color:blue; font-weight:bold; text-decoration:underline;">' . $auction->sItId . ' - ' . $auction->sItName . '</a></td>';
-													
-								$message .= '<td style="text-align:right; width:150px;">Data zakończenia</td>';
 								
-								$message .= '</tr><tr>';
-								
-								$message .= '<td style="width:500px;">';
-								
-								$message .= 'Aktualna cena: ' . $auction->sItPrice;
-				
-								if ($auction->sItIsBuyNow != 0) 
+								if ($maxPrice == 0)
 								{
-									$message .= ', Cena kup teraz: ' . $auction->sItIsBuyNow;
+									$message .= " | Brak ceny maksymalnej";
 								}
-				
-								$message .= '</td>';
-								
-								$message .= '<td style="text-align:right; width:150px;">' . date("Y-m-d", $auction->sItEndingTime) .'<br />' . date("H:i:s", $auction->sItEndingTime) . '</td>';
-								
-								$message .= '</tr>';		
+								else 
+								{
+									$message .= " | Cena maksymalna: " . $maxPrice;
+								}								
 									
-								//$this->db->query("INSERT INTO found_auctions VALUES($userId,$auction->sItId)");
+								$message .= '</p>';		
 								
-															
-							}
+								$message .= '<table style="font-family:Calibri; font-size:14px;">';
+							}					
+										
+							$message .= '<tr>';
 
+							if ($auction->sItThumb == 1) 
+							{
+								$message .= '<td rowspan="2"><img src="' . $auction->sItThumbUrl . '" alt="' . $auction->sItName . '" style="width:100px; height:auto;" /></td>';
+							} 
+							else 
+							{
+								$message .= '<td rowspan="2"><img src="http://static.allegrostatic.pl/site_images/1/0/layout/showItemNoPhoto.png" alt="Brak zdjęcia" style="width:100px; height:auto;" /></td>';
+							}
+			
+							$message .= '<td style="width:500px;"><a href="http://testwebapi.pl/show_item.php?item='.$auction->sItId.'" style="color:blue; font-weight:bold; text-decoration:underline;">' . $auction->sItId . ' - ' . $auction->sItName . '</a></td>';
+												
+							$message .= '<td style="text-align:right; width:150px;">Data zakończenia</td>';
+							
+							$message .= '</tr><tr>';
+							
+							$message .= '<td style="width:500px;">';
+							
+							$message .= 'Aktualna cena: ' . $auction->sItPrice;
+			
+							if ($auction->sItIsBuyNow != 0) 
+							{
+								$message .= ', Cena kup teraz: ' . $auction->sItIsBuyNow;
+							}
+			
+							$message .= '</td>';
+							
+							$message .= '<td style="text-align:right; width:150px;">' . date("Y-m-d", $auction->sItEndingTime) .'<br />' . date("H:i:s", $auction->sItEndingTime) . '</td>';
+							
+							$message .= '</tr>';		
+								
+							//$this->db->query("INSERT INTO found_auctions VALUES($userId,$auction->sItId)");
+														
 						}
 
-						$offset += $limit;
-						
 					}
-
-				} 
-				while ($offset < $allegroResult->searchCount);
+					
+				}
 				
 				if ($newAuctionsForFilterCount != 0)
 				{
