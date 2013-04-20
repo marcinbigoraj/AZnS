@@ -106,5 +106,30 @@ class Allegro_model extends CI_Model {
 		return $this->db->query("SELECT * FROM found_auctions WHERE id_user=$userId");
 	}
 
+	public function getVersionFromDB()
+	{
+		$this->db->select('ver_number');
+		$this->db->where('name', 'kategorie'); 
+		$query = $this->db->get('version');
+		return $query->result();
+	}
+	
+	public function updateDBVersion($vers){
+		$data = array(
+               'ver_number' => $vers
+            );
+
+		$this->db->where('name', 'kategorie'); 
+		$this->db->update('version', $data); 
+	}
+	
+	public function insertCatVersion($ver){
+		$data= array(
+			'name'=> 'kategorie',
+			'ver_number'=>$var['cat_version']
+		);
+		
+		$this->db->insert('version', $data);
+	}
 }
 ?>
