@@ -17,8 +17,8 @@ class SearchService extends CI_Controller {
 		$savedEmail = '';
 		$savedPhone = '';
 		
-		$newAuctionsForUserCount = 0;
-		$newAuctionsForFilterCount = 0;
+		$auctionsForFilter = 0;
+		$auctionsToInsert = array();
 
 		foreach ($this -> allegro_model -> getFiltersToSearchService() as $row)
 		{
@@ -46,16 +46,11 @@ class SearchService extends CI_Controller {
 			$offset = 0;
 			$limit = 100;		
 			
-			$newAuctionsForFilterCount = 0;
+			$auctionsForFilter = 0;
 			
 			if ($userId != $savedUserId && $savedUserId != -1) 
 			{
-				if ($newAuctionsForUserCount > 0)
-				{		
-					$this -> mailSender($message, $savedEmail);	
-				}
-				$newAuctionsForUserCount = 0;
-				$message = '';
+				$this -> createMessageToSend($savedUserId, $savedEmail, $message, $auctionsToInsert);
 			}
 			
 			$auctionForUserIdQuery = $this -> allegro_model -> getAuctionsForUserQuery($userId);
@@ -75,10 +70,10 @@ class SearchService extends CI_Controller {
 						if (!$this -> isAuctionIdInArray($auctionForUserIdQuery -> result(), $auction -> sItId))
 						{
 							
-							$newAuctionsForUserCount++;		
-							$newAuctionsForFilterCount++;	
+							$auctionsToInsert[] = $auction -> sItId;		
+							$auctionsForFilter++;	
 							
-							if ($newAuctionsForFilterCount == 1)
+							if ($auctionsForFilter == 1)
 							{
 								$message .= '<h1 style="font-family:Calibri; font-size:20px; font-weight:bold; color:green; padding:10px 0 0 0; margin:0;">'.$keyword.'</h1>';
 								$message .= '<p style="font-family:Calibri; font-size:16px; padding:3px 0 10px 0; margin:0;">';
@@ -160,9 +155,7 @@ class SearchService extends CI_Controller {
 							
 							$message .= '<td style="text-align:right; width:150px;">' . date("Y-m-d", $auction -> sItEndingTime) .'<br />' . date("H:i:s", $auction -> sItEndingTime) . '</td>';
 							
-							$message .= '</tr>';		
-								
-							$this -> allegro_model -> addSendedAuction($userId, $auction -> sItId);
+							$message .= '</tr>';																
 														
 						}
 
@@ -170,7 +163,7 @@ class SearchService extends CI_Controller {
 					
 				}
 				
-				if ($newAuctionsForFilterCount != 0)
+				if ($auctionsForFilter != 0)
 				{
 					$message .= "</table>";	
 				}	
@@ -188,11 +181,32 @@ class SearchService extends CI_Controller {
 			
 		}
 
-		if ($newAuctionsForUserCount > 0)
-		{		
-			$this -> mailSender($message, $savedEmail);	
-		}
+		$this -> createMessageToSend($savedUserId, $savedEmail, $message, $auctionsToInsert);
+		
+	}
 
+	private function createMessageToSend($userId, $savedEmail, &$message, &$auctionsArray)
+	{
+		
+		if (count($auctionsArray) > 0)
+		{
+				
+			if ($this -> mailSender($message, $savedEmail))
+			{
+				
+				foreach($auctionsArray as $auctionId)
+				{
+					$this -> allegro_model -> addSendedAuction($userId, $auctionId);
+				}
+				
+				log_message('info', 'Email send: ' . $savedEmail);
+			
+			}
+		}
+		
+		$message = '';
+		$auctionsArray = array();
+		
 	}
 
 	private function mailSender($BodyHtml, $To)
