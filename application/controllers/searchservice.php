@@ -42,13 +42,6 @@ class SearchService extends CI_Controller {
 			
 			$stateName = $row->st_name;
 			$catName = $row->c_name;
-			
-			if ($stateName == null || $catName == null)
-			{
-				log_message('error', 'filter is not active, category or state changed');
-				$this->allegro_model->setFilterBlocked(1, $filterId);
-				break;
-			}
 
 			$offset = 0;
 			$limit = 100;		

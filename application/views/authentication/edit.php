@@ -43,7 +43,7 @@
 	$phone = $form['phone'];
 	if (isset($_POST['editPhone']))
 	{
-		$phone = $_POST['editSend'];
+		$phone = $_POST['editPhone'];
 	}
 	$formString .= '<div id="editPhone">';
 	$formString .= "<span>Telefon</span>";
