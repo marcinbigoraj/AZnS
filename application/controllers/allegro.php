@@ -281,6 +281,7 @@ class Allegro extends CI_Controller {
 			);
 			
 			$this->allegro_model->updateFilter($data, $id);
+			$this->allegro_model->setFilterBlocked(0, $id);
 			
 			redirect('allegro/lista');
 		
