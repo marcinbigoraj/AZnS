@@ -111,7 +111,7 @@ class Allegro_model extends CI_Model {
 		$this->db->select('ver_number');
 		$this->db->where('name', 'kategorie'); 
 		$query = $this->db->get('version');
-		return $query->result();
+		return $query->row()->ver_number;
 	}
 	
 	public function updateDBVersion($vers){
@@ -126,10 +126,27 @@ class Allegro_model extends CI_Model {
 	public function insertCatVersion($ver){
 		$data= array(
 			'name'=> 'kategorie',
-			'ver_number'=>$ver['cat_version']
+			'ver_number'=>$var
 		);
 		
 		$this->db->insert('version', $data);
+	}
+	
+	public function getCurrentVersion()
+	{
+		$this->load->library('allegrowebapisoapclient');
+		$version = $this->allegrowebapisoapclient->getCategoriesVersion();
+		$country= $this->allegrowebapisoapclient->getCountryId();
+		foreach ($version->sysCountryStatus->item as $item) {
+			if($item->countryId==$country){
+				$data= array(
+				'id_country'=> $item->countryId,
+				'cat_version'=> $item->catsVersion);
+				break;
+			}
+		}
+		$currentVersion = $data['cat_version'];
+		return $currentVersion;
 	}
 }
 ?>

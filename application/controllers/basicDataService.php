@@ -13,10 +13,20 @@ class BasicDataService extends CI_Controller
 	
 	public function getListOfCategories()
 	{
-		$this->load->library('allegrowebapisoapclient');
-		$cat = $this->allegrowebapisoapclient->getMainCategories();		
+		$elementy=$this->getCategoriesArray();
+		
+		$this->insertCategoriesToDB($elementy);
+		
+		$currentVersion = $this->allegro_model->getCurrentVersion();
+		$this->allegro_model->insertCatVersion($currentVersion);
+	}
 	
-		$this->db->trans_start();
+	private function getCategoriesArray()
+	{
+		$this->load->library('allegrowebapisoapclient');
+		$cat = $this->allegrowebapisoapclient->getMainCategories();
+		
+		$elementy = array();
 		
 		$order=0;
 		$depth=0;
@@ -27,10 +37,9 @@ class BasicDataService extends CI_Controller
 			'sort' => $order,
 			'depth' => $depth
 		);
-		$this->db->insert('categories', $data);
+		$elementy[0]=$data;
 		$order++;
 		
-		$elementy = array();
 		foreach($cat->catsList->item as $item)
 		{
 			
@@ -70,13 +79,7 @@ class BasicDataService extends CI_Controller
 			$this->sortCategories($dzieckoID, $order, $depth, $elementy, $rodzice);
 		}
 		
-		foreach($elementy as $key => $element)
-		{
-			$this->db->insert('categories', $element);
-		}
-		
-		$this->db->trans_complete();
-		$catVersion = $cat->verKey;
+		return $elementy;
 	}
 	
 	private function sortCategories($dzieckoID, &$order, $depth, &$elementy, $rodzice)
@@ -94,6 +97,16 @@ class BasicDataService extends CI_Controller
 		    }
 		}
 	}
+	
+	private function insertCategoriesToDB($elementy)
+	{
+		$this->db->trans_start();
+		foreach($elementy as $key => $element)
+		{
+			$this->db->insert('categories', $element);
+		}
+		$this->db->trans_complete();
+	}	
 	
 	public function getListOfStates()
 	{
@@ -116,24 +129,7 @@ class BasicDataService extends CI_Controller
 			
 			$this->allegro_model->insertState($data);
 		}
-	}
-	
-	public function getVersion()
-	{
-		$this->load->library('allegrowebapisoapclient');
-		$version = $this->allegrowebapisoapclient->getCategoriesVersion();
-		$country= $this->allegrowebapisoapclient->getCountryId();
- 
-		foreach ($version->sysCountryStatus->item as $item) {
-			if($item->countryId==$country){
-				$data= array(
-				'id_country'=> $item->countryId,
-				'cat_version'=> $item->catsVersion);
-				break;
-			}
-		}
-		return($data);
-	}		
+	}	
 	
 	public function config(){
 		if($this->wasConf()){
@@ -144,7 +140,7 @@ class BasicDataService extends CI_Controller
 			try{
 				$this->getListOfStates();
 				$this->getListOfCategories();
-				$this->allegro_model->insertCatVersion($this->getVersion());
+				$this->allegro_model->insertCatVersion($this->allegro_model->getCurrentVersion());
 			}
 			catch(exception $e){
 				$komunikat="Konfiguracja zakończona niepowodzeniem";
@@ -155,6 +151,38 @@ class BasicDataService extends CI_Controller
 
 	public function wasConf(){
 		return $this->db->count_all('version')>0 ? true:false;
+	}
+	
+	public function getNewVersion()
+	{
+		$isNewVersion=false;
+		
+		$currentVersion = $this->allegro_model->getCurrentVersion();
+		
+		$versionFromDB = $this->allegro_model->getVersionFromDB();
+		if($currentVersion > $versionFromDB)
+		{
+			$isNewVersion=true;
+			$elementy= $this->getCategoriesArray();
+			$query = $this->db->query("SELECT id, c.id_cat AS idcat, c.name AS name FROM search s LEFT JOIN categories c ON s.id_cat=c.id_cat");
+			foreach ($query->result() as $row)
+			{
+			   if($row->idcat==null || $elementy[$row->idcat]['name'] != $row->name)
+			   {
+			   		$this->allegro_model->setFilterBlocked(1, $row->id);
+			   }
+			}
+			
+			$this->allegro_model->updateDBVersion($currentVersion);
+			$this->allegro_model->clearCategories();
+			$this->insertCategoriesToDB($elementy);	
+		}
+		
+		if(!$isNewVersion)
+		{
+		print_r("dupa");
+		}
+		return $isNewVersion;
 	}
 }
 
