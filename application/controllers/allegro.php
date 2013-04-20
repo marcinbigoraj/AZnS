@@ -45,61 +45,69 @@ class Allegro extends CI_Controller {
 			redirect('authentication/login');
 		}
 
-		if (isset($_POST['dodajFiltr'])) {
-
-			$user_id = $this->ion_auth->user()->row()->id;
-			$keywords = $_POST['keywords'];
-			$id_cat = $_POST['id_cat'];
-			$anyWord = $_POST['anyWord'];
-			$includeDescription = $_POST['includeDescription'];
-			$buyNow = $_POST['buyNow'];
-			$city = $_POST['city'];
-			$voivodeship =$_POST['voivodeship'];
-			$minPrice = $_POST['minPrice'];
-			$maxPrice =$_POST['maxPrice'];
-			
-			if($buyNow=="true")
-			{
-				$buyNow=1;
-			}
-			else {
-				$buyNow=0;
-			}
-			
-			if($anyWord=="true")
-			{
-				$anyWord=1;
-			}
-			else {
-				$anyWord=0;
-			}
-			
-			if($includeDescription=="true")
-			{
-				$includeDescription=1;
-			}
-			else {
-				$includeDescription=0;
-			}
-			
-			$this -> load -> database();
-			$data = array(
-			'user_id' => $user_id,
-			'keywords' => $keywords,
-			'id_cat' => $id_cat,
-			'anyWord' => $anyWord, 
-			'includeDescription' => $includeDescription,
-			'buyNow' => $buyNow,
-			'city' => $city,
-			'voivodeship' => $voivodeship,
-			'minPrice' => $minPrice,
-			'maxPrice' => $maxPrice,
-			'active' => 1
-			);
-			$this -> db -> insert('search', $data);
+		if (!$this->validateFilterForm()) 
+		{
+			echo validation_errors();
 		}
+		else 
+		{
 
-		redirect('allegro/lista');
+			if (isset($_POST['dodajFiltr'])) {
+	
+				$user_id = $this->ion_auth->user()->row()->id;
+				$keywords = $_POST['keywords'];
+				$id_cat = $_POST['id_cat'];
+				$anyWord = $_POST['anyWord'];
+				$includeDescription = $_POST['includeDescription'];
+				$buyNow = $_POST['buyNow'];
+				$city = $_POST['city'];
+				$voivodeship =$_POST['voivodeship'];
+				$minPrice = $_POST['minPrice'];
+				$maxPrice =$_POST['maxPrice'];
+				
+				if($buyNow=="true")
+				{
+					$buyNow=1;
+				}
+				else {
+					$buyNow=0;
+				}
+				
+				if($anyWord=="true")
+				{
+					$anyWord=1;
+				}
+				else {
+					$anyWord=0;
+				}
+				
+				if($includeDescription=="true")
+				{
+					$includeDescription=1;
+				}
+				else {
+					$includeDescription=0;
+				}
+	
+				$data = array(
+				'user_id' => $user_id,
+				'keywords' => $keywords,
+				'id_cat' => $id_cat,
+				'anyWord' => $anyWord, 
+				'includeDescription' => $includeDescription,
+				'buyNow' => $buyNow,
+				'city' => $city,
+				'voivodeship' => $voivodeship,
+				'minPrice' => $minPrice,
+				'maxPrice' => $maxPrice,
+				'active' => 1
+				);
+				$this -> db -> insert('search', $data);
+			}
+	
+			redirect('allegro/lista');
+		
+		}
 
 	}
 	
@@ -107,7 +115,7 @@ class Allegro extends CI_Controller {
 		if (!$this -> ion_auth -> logged_in()) {
 			redirect('authentication/login');
 		}
-		$this -> load -> database();
+	
 		$query = $this -> db -> query("SELECT user_id FROM search WHERE id=$id");
 		foreach($query->result() as $row)
 		{
@@ -140,6 +148,18 @@ class Allegro extends CI_Controller {
 		
 		foreach($query->result() as $row)
 		{
+			$minPrice = $row->minPrice;
+			if ($minPrice == 0)
+			{
+				$minPrice = '';
+			} 
+			
+			$maxPrice = $row->maxPrice;
+			if ($maxPrice == 0)
+			{
+				$maxPrice = '';
+			}
+			
 			$zapisaneDane = array(
 			'id'=>$id,
 			'keywords'=> $row->keywords,
@@ -149,8 +169,8 @@ class Allegro extends CI_Controller {
 			'buyNow'=> $row->buyNow,
 			'city'=> $row->city,
 			'voivodeship'=> $row->voivodeship,
-			'minPrice'=> $row->minPrice,
-			'maxPrice'=> $row->maxPrice
+			'minPrice'=> $minPrice,
+			'maxPrice'=> $maxPrice
 			);
 		}
 		$data['zapisaneDane']=$zapisaneDane;
@@ -165,59 +185,87 @@ class Allegro extends CI_Controller {
 			redirect('authentication/login');
 		}
 		
-		if (isset($_POST['zapiszZmiany'])) {
-			$id= $_POST['id'];
-			$keywords = $_POST['keywords'];
-			$id_cat = $_POST['id_cat'];
-			$anyWord = $_POST['anyWord'];
-			$includeDescription = $_POST['includeDescription'];
-			$buyNow = $_POST['buyNow'];
-			$city = $_POST['city'];
-			$voivodeship =$_POST['voivodeship'];
-			$minPrice = $_POST['minPrice'];
-			$maxPrice =$_POST['maxPrice'];
+		if (!$this->validateFilterForm()) 
+		{
+			echo validation_errors();
+		}
+		else 
+		{
+
+			if (isset($_POST['zapiszZmiany'])) {
+				$id= $_POST['id'];
+				$keywords = $_POST['keywords'];
+				$id_cat = $_POST['id_cat'];
+				$anyWord = $_POST['anyWord'];
+				$includeDescription = $_POST['includeDescription'];
+				$buyNow = $_POST['buyNow'];
+				$city = $_POST['city'];
+				$voivodeship =$_POST['voivodeship'];
+				$minPrice = $_POST['minPrice'];
+				$maxPrice =$_POST['maxPrice'];
+				
+				if($buyNow=="true")
+				{
+					$buyNow=1;
+				}
+				else {
+					$buyNow=0;
+				}
+				
+				if($anyWord=="true")
+				{
+					$anyWord=1;
+				}
+				else {
+					$anyWord=0;
+				}
+				
+				if($includeDescription=="true")
+				{
+					$includeDescription=1;
+				}
+				else {
+					$includeDescription=0;
+				}
+	
+				$data = array(
+				'keywords' => $keywords,
+				'id_cat' => $id_cat,
+				'anyWord' => $anyWord, 
+				'includeDescription' => $includeDescription,
+				'buyNow' => $buyNow,
+				'city' => $city,
+				'voivodeship' => $voivodeship,
+				'minPrice' => $minPrice,
+				'maxPrice' => $maxPrice
+				);
+				
+				$this->db->update('search', $data, array('id' => $id)); 
+			}
 			
-			if($buyNow=="true")
-			{
-				$buyNow=1;
-			}
-			else {
-				$buyNow=0;
-			}
-			
-			if($anyWord=="true")
-			{
-				$anyWord=1;
-			}
-			else {
-				$anyWord=0;
-			}
-			
-			if($includeDescription=="true")
-			{
-				$includeDescription=1;
-			}
-			else {
-				$includeDescription=0;
-			}
-			
-			$this -> load -> database();
-			$data = array(
-			'keywords' => $keywords,
-			'id_cat' => $id_cat,
-			'anyWord' => $anyWord, 
-			'includeDescription' => $includeDescription,
-			'buyNow' => $buyNow,
-			'city' => $city,
-			'voivodeship' => $voivodeship,
-			'minPrice' => $minPrice,
-			'maxPrice' => $maxPrice
-			);
-			
-			$this->db->update('search', $data, array('id' => $id)); 
+			redirect('allegro/lista');
+		
+		}
+
+	}
+
+	private function validateFilterForm() 
+	{
+		
+		$this->form_validation->set_rules('keywords', 'Słowa kluczowe', 'trim|required|min_length[3]|max_length[20]|xss_clean');
+		$this->form_validation->set_rules('city', 'Miasto', 'trim|max_length[50]|xss_clean');
+		$this->form_validation->set_rules('minPrice', 'Cena minimalna', 'is_natural|less_than[1000000]');
+		$minPrice = $_POST['minPrice'];
+		$this->form_validation->set_rules('maxPrice', 'Cena maksymalna', 'is_natural|less_than[100000]|greater_than['.$minPrice.']');
+		
+		if ($this->form_validation->run())
+		{
+			return true;
 		}
 		
-		redirect('allegro/lista');
+		return false;
+		
 	}
+
 }
 ?>

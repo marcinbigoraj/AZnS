@@ -11,7 +11,6 @@ class Authentication extends CI_Controller
 	public function login()
 	{				
 		$data['title'] = "Logowanie";
-		$data['loginForm'] =  $this->forms_model->createLoginForm();
 		$data['errors'] = '';
 		
 		if (isset($_POST['loginSend']))
@@ -91,7 +90,6 @@ class Authentication extends CI_Controller
 	public function register()
 	{		
 		$data['title'] = "Rejestracja";
-		$data['registerForm'] = $this->forms_model->createRegisterForm();
 		$data['errors'] = '';
 		
 		if (isset($_POST['registerSend']))

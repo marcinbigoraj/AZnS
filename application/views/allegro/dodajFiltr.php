@@ -1,5 +1,7 @@
 <h1><?php echo $title; ?></h1>
 
+<div id="addFilterForm" class="form">
+	
 <?php echo form_open('allegro/zapiszFiltr'); ?>
 	<table>
 		<tbody>
@@ -98,4 +100,6 @@
 		</tbody>
 	</table>
 <?php echo form_close(); ?>
+
 <a href='<?php echo site_url('allegro/lista'); ?>'>Wróć</a>
+</div>

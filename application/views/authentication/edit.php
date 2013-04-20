@@ -44,4 +44,6 @@
 	echo $formString;
 
 ?>
+
+<a href='<?php echo site_url('allegro/lista'); ?>'>Wróć</a>
 </div>
