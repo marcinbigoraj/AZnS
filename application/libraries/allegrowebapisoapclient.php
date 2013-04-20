@@ -110,6 +110,17 @@ class AllegroWebAPISoapClient extends SoapClient
 		return $this->doSearch($doSearch_request);		
 	}
 
+	public function getCategoriesVersion(){
+		$doGetStatesInfo_request = array(
+			'countryId' => $this->config['country'],
+   			'webapiKey' => $this->config['webapikey']
+		);
+		return $this->doQueryAllSysStatus($doGetStatesInfo_request);
+	}
+	
+	public function getCountryId(){
+		return $this->config['country'];
+	}
 }
 
 ?>
