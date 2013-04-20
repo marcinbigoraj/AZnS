@@ -15,6 +15,7 @@ class Test extends CI_Controller {
 		}
 		
 		$this -> allegro_model -> clearAuctions();
+		log_message('info', 'Wykasowano dane o znalezionych aukcjach');
 		redirect('allegro/filtersList');
 	}
 
@@ -25,6 +26,7 @@ class Test extends CI_Controller {
 			redirect('authentication/login');
 		}
 				
+		log_message('info', 'Wyczyszczono listę kategorii.');
 		$this->allegro_model->clearCategories();
 		redirect('allegro/filtersList');		
 	}
@@ -36,6 +38,7 @@ class Test extends CI_Controller {
 			redirect('authentication/login');
 		}
 		
+		log_message('info', 'Wyczyszczono listę regionów.');
 		$this->allegro_model->clearStates();
 		redirect('allegro/filtersList');
 	}

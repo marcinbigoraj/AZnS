@@ -97,6 +97,7 @@ class BasicDataService extends CI_Controller
 			$this -> db -> insert('categories', $element);
 		}
 		$this -> db -> trans_complete();
+		log_message('info', 'Dodawanie kategorii do bazy zakończone');
 	}	
 	
 	public function getListOfStates()
@@ -140,6 +141,7 @@ class BasicDataService extends CI_Controller
 			}
 			catch(exception $e)
 			{
+				log_message('error', 'Konfiguracja zakończona niepowodzeniem');
 				$komunikat = "Konfiguracja zakończona niepowodzeniem";
 			}
 			
@@ -164,9 +166,9 @@ class BasicDataService extends CI_Controller
 		if($currentVersion > $versionFromDB)
 		{
 			
-			$isNewVersion=true;
+			$isNewVersion = true;
 			
-			$elements = $this->getCategoriesArray();
+			$elements = $this -> getCategoriesArray();
 			$query = $this -> db -> query("SELECT id, c.id_cat AS idcat, c.name AS name FROM search s LEFT JOIN categories c ON s.id_cat=c.id_cat");
 			
 			foreach ($query->result() as $row)

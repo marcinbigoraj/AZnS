@@ -1,1 +1,0 @@
-ALTER TABLE `search` ADD `blocked` BOOLEAN NOT NULL DEFAULT 0 AFTER `active`

@@ -183,6 +183,8 @@ class SearchService extends CI_Controller {
 
 		$this -> createMessageToSend($savedUserId, $savedEmail, $message, $auctionsToInsert);
 		
+		log_message('info', 'Skrypt sprawdzający aukcje zakończony.');
+		
 	}
 
 	private function createMessageToSend($userId, $savedEmail, &$message, &$auctionsArray)
