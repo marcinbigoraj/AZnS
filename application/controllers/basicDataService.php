@@ -108,8 +108,7 @@ class BasicDataService extends CI_Controller
 		
 		foreach($state->statesInfoArray->item as $item)
 		{
-			echo '<p>'.$item->stateId.' '.$item->stateName.'</p>';
-			
+ 			
 			$data = array(
 				'id_state' => $item->stateId,
 				'name' => $item->stateName,
@@ -136,7 +135,27 @@ class BasicDataService extends CI_Controller
 		return($data);
 	}		
 	
-	
+	public function config(){
+		if($this->wasConf()){
+			echo "<p>Dokonywałeś już początkowej konfiguracji serwera. Przejdź do strony logowania</p>";
+		}
+		else{
+			$komunikat="Gratuluje! Konfiguracja zakończona powodzeniem!";
+			try{
+			$this->getListOfStates();
+			$this->getListOfCategories();
+			$this->allegro_model->insertCatVersion($this->getVersion());
+			}
+			catch(exception $e){
+				$komunikat="Konfiguracja zakończona niepowodzeniem";
+			}
+			echo $komunikat;						
+		}
+	}
+
+	public function wasConf(){
+		return $this->db->count_all('version')>0 ? true:false;
+	}
 }
 
 ?>

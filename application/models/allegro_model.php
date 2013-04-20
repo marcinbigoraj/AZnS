@@ -126,7 +126,7 @@ class Allegro_model extends CI_Model {
 	public function insertCatVersion($ver){
 		$data= array(
 			'name'=> 'kategorie',
-			'ver_number'=>$var['cat_version']
+			'ver_number'=>$ver['cat_version']
 		);
 		
 		$this->db->insert('version', $data);
