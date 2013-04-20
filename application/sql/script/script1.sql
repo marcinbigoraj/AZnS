@@ -30,6 +30,8 @@ CREATE TABLE IF NOT EXISTS `categories` (
   `id_cat` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
   `parent_id` int(11) NOT NULL,
+  `sort` int(10) NOT NULL DEFAULT 0,
+  `depth` smallint(6) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id_cat`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -41,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
 
 CREATE TABLE IF NOT EXISTS `found_auctions` (
   `id_user` int(11) NOT NULL,
-  `id_auc` int(11) NOT NULL,
+  `id_auc` bigint(20) NOT NULL,
   PRIMARY KEY (`id_user`,`id_auc`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -56,14 +58,41 @@ CREATE TABLE IF NOT EXISTS `search` (
   `user_id` int(11) NOT NULL,
   `keywords` varchar(60) NOT NULL,
   `id_cat` int(11) DEFAULT NULL,
+  `anyWord` BOOLEAN NOT NULL,
+  `includeDescription` BOOLEAN NOT NULL,
   `buyNow` tinyint(1) NOT NULL,
   `city` varchar(35) DEFAULT NULL,
   `voivodeship` int(11) DEFAULT NULL,
   `minPrice` float NOT NULL,
   `maxPrice` float NOT NULL,
   `active` tinyint(1) NOT NULL,
+  `blocked` BOOLEAN NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `states`
+--
+
+CREATE TABLE IF NOT EXISTS `states` (
+  `id_state` int(11) NOT NULL,
+  `name` varchar(45) NOT NULL,
+  PRIMARY KEY (`id_state`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `states`
+--
+
+CREATE TABLE IF NOT EXISTS `version` (
+  `name` varchar(15) NOT NULL,
+  `ver_number` varchar(15) NOT NULL,
+  PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
