@@ -13,9 +13,22 @@ class BasicDataService extends CI_Controller
 	{
 		$this->load->library('allegrowebapisoapclient');
 		$cat = $this->allegrowebapisoapclient->getMainCategories();		
+	
+		$this->db->trans_start();
 		
+		$order=0;
+		$depth=0;
+		$data = array(
+			'id_cat' => 0,
+			'name' => "Dowolna",
+			'parent_id' => 0,
+			'sort' => $order,
+			'depth' => $depth
+		);
+		$this->db->insert('categories', $data);
+		$order++;
 		
-		
+		$elementy = array();
 		foreach($cat->catsList->item as $item)
 		{
 			
@@ -29,57 +42,53 @@ class BasicDataService extends CI_Controller
 				'depth' => 0
 			);
 			
-			 $this->db->insert('categories', $data);
-			
+			$elementy[$item->catId]=$data;
+			$elementySort[$item->catId]=$data;
 		}
 		
-		$wholeArray = array();
-		$order=0;
-		$depth=0;
-		$data = array(
-			'id_cat' => 0,
-			'name' => "Dowolna",
-			'parent_id' => 0,
-			'sort' => $order,
-			'depth' => $depth
-		);
-		array_push($wholeArray, $data);
-		$order++;
-		
-		$query = $this->db->query("SELECT * FROM categories WHERE parent_id=0 ORDER BY name");
-		foreach($query->result() as $row)
+		foreach($elementySort as $key => $row)
 		{
-			$this->sortCategories($wholeArray, $row, $order, $depth);
+			$name[$key]= $row['name'];
 		}
 		
-		$this->db->query("DELETE FROM categories");
-		foreach ($wholeArray as $key => $item)
-	    {
-	    	$this->db->insert('categories', $item);
-	    }
+		array_multisort($name, SORT_LOCALE_STRING, $elementySort);
 		
+		$rodzice = array();
+		foreach($elementySort as $key => $row)
+		{
+			if(!isset($rodzice[$row['parent_id']]))
+			{
+				$rodzice[$row['parent_id']] = array();
+			}
+			array_push($rodzice[$row['parent_id']], $row['id_cat']);
+		}
+		
+		foreach($rodzice[0] as $index => $dzieckoID)
+		{
+			$this->sortCategories($dzieckoID, $order, $depth, $elementy, $rodzice);
+		}
+		
+		foreach($elementy as $key => $element)
+		{
+			$this->db->insert('categories', $element);
+		}
+		
+		$this->db->trans_complete();
 		$catVersion = $cat->verKey;
 	}
 	
-	private function sortCategories(&$wholeArray, $row, &$order, $depth)
+	private function sortCategories($dzieckoID, &$order, $depth, &$elementy, $rodzice)
 	{
-		$data = array(
-			'id_cat' => $row->id_cat,
-			'name' => $row->name,
-			'parent_id' => $row->parent_id,
-			'sort' => $order,
-			'depth' => $depth
-		);
-		array_push($wholeArray, $data);
+		$elementy[$dzieckoID]['sort']=$order;
+		$elementy[$dzieckoID]['depth']=$depth;
 		$order++;
 		
-		$query = $this->db->query("SELECT * FROM categories WHERE parent_id=$row->id_cat ORDER BY name");
-		if($query->num_rows()>0)
+		if(isset($rodzice[$dzieckoID]))
 		{
 			$depth++;
-			foreach ($query->result() as $deeperRow)
+			foreach ($rodzice[$dzieckoID] as $index => $dalszeDzieckoID)
 		    {
-		    	$this->sortCategories($wholeArray, $deeperRow, $order, $depth);
+		    	$this->sortCategories($dalszeDzieckoID, $order, $depth, $elementy, $rodzice);
 		    }
 		}
 	}
