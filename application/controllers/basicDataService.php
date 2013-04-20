@@ -3,8 +3,10 @@
 class BasicDataService extends CI_Controller
 {
 	
+	
 	public function __construct() 
 	{
+		
 		parent::__construct();
 	}
 	
@@ -116,6 +118,24 @@ class BasicDataService extends CI_Controller
 			$this->allegro_model->insertState($data);
 		}
 	}
+	
+	public function getVersion()
+	{
+		$this->load->library('allegrowebapisoapclient');
+		$version = $this->allegrowebapisoapclient->getCategoriesVersion();
+		$country= $this->allegrowebapisoapclient->getCountryId();
+ 
+		foreach ($version->sysCountryStatus->item as $item) {
+			if($item->countryId==$country){
+				$data= array(
+				'id_country'=> $item->countryId,
+				'cat_version'=> $item->catsVersion);
+				break;
+			}
+		}
+		return($data);
+	}		
+	
 	
 }
 
