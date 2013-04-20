@@ -5,16 +5,20 @@ class SearchService extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 	}
-
+	
 	public function searchAllNews() {
 		
 		$this->load->library('allegrowebapisoapclient');	
 		$this->load->library('phpmailer/phpmailer');	
 		
 		$filterQuery = $this->db->query("
-			SELECT u.username, u.email, u.phone, s.* FROM search s
+			SELECT u.username, u.email, u.phone, s.*, c.name as c_name, st.name as st_name
+			FROM search s
 			INNER JOIN users u ON u.id = s.user_id
-			WHERE s.active = 1 ORDER BY s.user_id, id DESC
+			LEFT JOIN categories c ON c.id_cat = s.id_cat
+			LEFT JOIN states st ON st.id_state = s.voivodeship
+			WHERE s.active = 1
+			ORDER BY s.user_id, id DESC
 		");
 
 		$message = '';
@@ -38,11 +42,23 @@ class SearchService extends CI_Controller {
 			
 			$keyword = $row->keywords;
 			$catId = $row->id_cat;
+			$anyWord = $row->anyWord;
+			$includeDesc = $row->includeDescription;
 			$buyNow = $row->buyNow;
 			$city = $row->city;
 			$state = $row->voivodeship;
 			$minPrice = $row->minPrice;
 			$maxPrice = $row->maxPrice;
+			
+			$stateName = $row->st_name;
+			$catName = $row->c_name;
+			
+			if ($stateName == null || $catName == null)
+			{
+				log_message('error', 'filter is not active, category or state changed');
+				$this->db->query("UPDATE search SET active = 0 WHERE id = $filterId");
+				break;
+			}
 
 			$offset = 0;
 			$limit = 100;		
@@ -69,8 +85,8 @@ class SearchService extends CI_Controller {
 				do 
 				{
 
-					$allegroResult = $this->allegrowebapisoapclient->searchAuction($keyword, $buyNow, $catId, $offset, $city, 
-						$state, $minPrice, $maxPrice, $limit);
+					$allegroResult = $this->allegrowebapisoapclient->searchAuction($keyword, $catId, $anyWord, $includeDesc, 
+						$buyNow, $city, $state, $minPrice, $maxPrice, $offset, $limit);
 					
 					if ($allegroResult->searchCount != 0) 
 					{							
@@ -89,15 +105,47 @@ class SearchService extends CI_Controller {
 									$message .= '<h1 style="font-family:Calibri; font-size:20px; font-weight:bold; color:green; padding:10px 0 0 0; margin:0;">'.$keyword.'</h1>';
 									$message .= '<p style="font-family:Calibri; font-size:16px; padding:3px 0 10px 0; margin:0;">';
 									
-									if ($catId == 0)
+									$message .= 'Kategoria: ' . $catName;
+									
+									if($anyWord == 1) 
 									{
-										$message .= 'Wszystkie kategorie';
+										$message .= " | Którekolwiek słowo";
 									}
-										
-									if ($buyNow != 0)
+									
+									if($includeDesc == 1)
 									{
-										$message .= ' Kup teraz ';
+										$message .= " | Szukaj w opisach";
 									}
+
+									if ($buyNow == 1)
+									{
+										$message .= ' | Kup teraz';
+									}
+									
+									if ($city != '')
+									{
+										$message .= ' | Miasto: ' . $city;
+									}
+									
+									$message .= " | Region: " . $stateName;
+									
+									if ($minPrice == 0)
+									{
+										$message .= " | Brak ceny minimalnej";
+									}
+									else 
+									{
+										$message .= " | Cena minimalna: " . $minPrice;
+									}
+									
+									if ($maxPrice == 0)
+									{
+										$message .= " | Brak ceny maksymalnej";
+									}
+									else 
+									{
+										$message .= " | Cena maksymalna: " . $maxPrice;
+									}								
 										
 									$message .= '</p>';		
 									
@@ -137,6 +185,7 @@ class SearchService extends CI_Controller {
 								$message .= '</tr>';		
 									
 								//$this->db->query("INSERT INTO found_auctions VALUES($userId,$auction->sItId)");
+								
 															
 							}
 
@@ -149,7 +198,7 @@ class SearchService extends CI_Controller {
 				} 
 				while ($offset < $allegroResult->searchCount);
 				
-				if ($newAuctionsForUserCount != 0)
+				if ($newAuctionsForFilterCount != 0)
 				{
 					$message .= "</table>";	
 				}	

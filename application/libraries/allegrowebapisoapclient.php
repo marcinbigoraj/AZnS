@@ -71,26 +71,23 @@ class AllegroWebAPISoapClient extends SoapClient
 		return $this->doGetStatesInfo($doGetStatesInfo_request);
 	}
 	
-	public function searchAuction($text, $buyNow, $category, $offset, $city, $state, $priceFrom, $priceTo, $limit)
+	public function searchAuction($keyword, $catId, $anyWord, $includeDesc, $buyNow, $city, $state, $minPrice, $maxPrice, $offset, $limit)
 	{
-		$searchOptions = 1; // którekolwiek z wpisanych słów
-		$searchOptions += 2; // szukanie w opisach
+		$searchOptions = 0; 
+		
+		if ($anyWord == 1)
+		{
+			$searchOptions += 1; // którekolwiek z wpisanych słów
+		}
+		
+		if ($includeDesc == 1)
+		{
+			$searchOptions += 2; // szukaj również w opisach
+		}
 		
 		if ($buyNow == 1) 
 		{
 			$searchOptions += 8; // tylko kup teraz
-		}
-		
-		$cityOptions = '';
-		if ($city != NULL)
-		{	
-			$cityOptions = $city;
-		}
-		
-		$stateOptions = 0;
-		if ($state != NULL) 
-		{
-			$stateOptions = $state;
 		}
 		
 		$sessionHandle = $this->session->sessionHandlePart;	
@@ -98,14 +95,14 @@ class AllegroWebAPISoapClient extends SoapClient
 		$doSearch_request = array(
 			'sessionHandle' => $sessionHandle,
 			'searchQuery' => array(
-				'searchString' => $text,
+				'searchString' => $keyword,
 				'searchOptions' => $searchOptions,
-				'searchCategory' => $category,
+				'searchCategory' => $catId,
 				'searchOffset' => $offset,
-				'searchCity' => $cityOptions,
-				'searchState' => $stateOptions,
-				'searchPriceFrom' => $priceFrom,
-				'searchPriceTo' => $priceTo,
+				'searchCity' => $city,
+				'searchState' => $state,
+				'searchPriceFrom' => $minPrice,
+				'searchPriceTo' => $maxPrice,
 				'searchLimit' => $limit				
 			)
 		);	
