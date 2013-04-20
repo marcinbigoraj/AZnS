@@ -126,6 +126,23 @@ class BasicDataService extends CI_Controller
 		}
 		return($data);
 	}		
+	
+	public function getVersionFromDB()
+	{
+		$this->db->select('ver_number');
+		$this->db->where('name', 'kategorie'); 
+		$query = $this->db->get('version');
+		return $query->result();
+	}
+	
+	public function updateDBVersion($vers){
+		$data = array(
+               'ver_number' => $vers
+            );
+
+		$this->db->where('name', 'kategorie'); 
+		$this->db->update('version', $data); 
+	}
 }
 
 ?>
