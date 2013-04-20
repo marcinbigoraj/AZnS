@@ -178,10 +178,6 @@ class BasicDataService extends CI_Controller
 			$this->insertCategoriesToDB($elementy);	
 		}
 		
-		if(!$isNewVersion)
-		{
-		print_r("dupa");
-		}
 		return $isNewVersion;
 	}
 }
