@@ -6,9 +6,9 @@
 	{
 		echo "<a href='" . site_url('authentication/logout') . "'>Wyloguj</a>";
 		echo " | <a href='" . site_url('authentication/edit') . "'>Edytuj dane </a>";
-		echo " | <a href='" . site_url('a/clearAuctions') . "'>Wyczyść tablicę wysłanych aukcji (dla testu)</a>";
-		echo " | <a href='" . site_url('a/clearCategories') . "'>Wyczyść tablicę kategorii (dla testu)</a>";
-		echo " | <a href='" . site_url('a/clearStates') . "'>Wyczyść tablicę regionów (dla testu)</a>";
+		echo " | <a href='" . site_url('test/clearAuctions') . "'>Wyczyść tablicę wysłanych aukcji (dla testu)</a>";
+		echo " | <a href='" . site_url('test/clearCategories') . "'>Wyczyść tablicę kategorii (dla testu)</a>";
+		echo " | <a href='" . site_url('test/clearStates') . "'>Wyczyść tablicę regionów (dla testu)</a>";
 	}
 	
 	?>
