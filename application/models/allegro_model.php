@@ -163,6 +163,12 @@ class Allegro_model extends CI_Model {
 		$currentVersion = $data['cat_version'];
 		return $currentVersion;
 	}
+	
+	public function addSendedAuction($userId, $auctionId)
+	{
+		$this -> db -> query("INSERT INTO found_auctions VALUES($userId, $auctionId)");	
+	}
+	
 }
 
 ?>
