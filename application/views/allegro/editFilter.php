@@ -43,7 +43,7 @@
 			</tr>
 			<tr>
 				<td>
-					Którekolwiek z szukanych słów
+					Którekolwiek z wpisanych słów
 				</td>
 				<td>
 					<?php echo form_checkbox('anyWord', 'true', $savedData['anyWord'] == 1 ? TRUE : FALSE ); ?>

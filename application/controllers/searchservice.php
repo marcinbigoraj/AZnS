@@ -62,11 +62,18 @@ class SearchService extends CI_Controller {
 					$buyNow, $city, $state, $minPrice, $maxPrice, $offset, $limit);
 				
 				if ($allegroResult -> searchCount != 0) 
-				{							
+				{
+					
+					if (is_object($allegroResult -> searchArray -> item)) 
+					{
+						$tempAuction = $allegroResult -> searchArray -> item;
+						$allegroResult -> searchArray -> item = array();
+						$allegroResult -> searchArray -> item[] = $tempAuction;
+					}						
 					
 					foreach ($allegroResult -> searchArray -> item as $auction) 
 					{
-
+						
 						if (!$this -> isAuctionIdInArray($auctionForUserIdQuery -> result(), $auction -> sItId))
 						{
 							
@@ -100,7 +107,7 @@ class SearchService extends CI_Controller {
 									$message .= ' | Miasto: ' . $city;
 								}
 								
-								$message .= " | Region: " . $stateName;
+								$message .= " | Województwo: " . $stateName;
 								
 								if ($minPrice == 0)
 								{
@@ -144,11 +151,18 @@ class SearchService extends CI_Controller {
 							
 							$message .= '<td style="width:500px;">';
 							
-							$message .= 'Aktualna cena: ' . $auction -> sItPrice;
+							if ($auction -> sItPrice != 0)
+							{
+								$message .= 'Aktualna cena: ' . $auction -> sItPrice . ", ";
+							}
 			
 							if ($auction -> sItIsBuyNow != 0) 
 							{
-								$message .= ', Cena kup teraz: ' . $auction -> sItIsBuyNow;
+								$message .= 'Cena kup teraz: ' . $auction -> sItBuyNowPrice;
+							}
+							else 
+							{
+								$message .= 'Cena kup teraz: brak';
 							}
 			
 							$message .= '</td>';
@@ -195,15 +209,16 @@ class SearchService extends CI_Controller {
 				
 			if ($this -> mailSender($message, $savedEmail))
 			{
-				
+		
 				foreach($auctionsArray as $auctionId)
 				{
 					$this -> allegro_model -> addSendedAuction($userId, $auctionId);
 				}
-				
+					
 				log_message('info', 'Email send: ' . $savedEmail);
-			
-			}
+ 			
+		 	}
+
 		}
 		
 		$message = '';

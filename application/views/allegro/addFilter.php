@@ -51,7 +51,7 @@
 			</tr>
 			<tr>
 				<td>
-					Którekolwiek z szukanych słów
+					Którekolwiek z wpisanych słów
 				</td>
 				<td>
 					<?php echo form_checkbox('anyWord', 'true', isset($_POST['anyWord']) ? $_POST['anyWord'] : FALSE); ?>

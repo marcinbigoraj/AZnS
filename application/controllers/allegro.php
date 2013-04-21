@@ -256,8 +256,14 @@ class Allegro extends CI_Controller {
 		$this -> form_validation -> set_rules('keywords', 'Słowa kluczowe', 'trim|required|min_length[3]|max_length[20]|xss_clean');
 		$this -> form_validation -> set_rules('city', 'Miasto', 'trim|max_length[50]|xss_clean');
 		$this -> form_validation -> set_rules('minPrice', 'Cena minimalna', 'is_natural|less_than[1000000]');
+		
 		$minPrice = ($_POST['minPrice'] == '') ? 0 : $_POST['minPrice'];
-		$this -> form_validation -> set_rules('maxPrice', 'Cena maksymalna', 'is_natural|less_than[100000]|greater_than['.$minPrice.']');
+		$maxPrice = ($_POST['maxPrice'] == '') ? 0 : $_POST['maxPrice'];
+		
+		if ($maxPrice != 0)
+		{
+			$this -> form_validation -> set_rules('maxPrice', 'Cena maksymalna', 'is_natural|less_than[100000]|greater_than['.$minPrice.']');
+		}
 		
 		if ($this -> form_validation -> run())
 		{
