@@ -166,6 +166,21 @@ class AllegroWebAPISoapClient extends SoapClient
 				
 			}
 			
+			if (isset($result -> arrayItemsAdminKilled -> item))
+			{
+				
+				if (!is_array($result -> arrayItemsAdminKilled -> item))
+				{
+					$result -> arrayItemsNotFound -> item = array($result -> arrayItemsNotFound -> item);
+				}
+				
+				foreach ($result -> arrayItemsNotFound -> item as $item)
+				{
+					$notExistsIdsArray[] = $item;
+				}
+				
+			}
+			
 			$offset += $limit;
 		
 		}
