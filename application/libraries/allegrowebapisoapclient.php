@@ -124,6 +124,56 @@ class AllegroWebAPISoapClient extends SoapClient
 		return $this -> config['country'];
 	}
 	
+	public function getNotExistsAuctions($auctionsIds)
+	{
+		$sessionHandle = $this -> session -> sessionHandlePart;	
+		
+		$limit = 25;
+		$offset = 0;
+		
+		$notExistsIdsArray = array();
+		
+		do
+		{
+
+			$slice = array_slice($auctionsIds, $offset, $limit);
+			
+			$doGetItemsInfo_request = array(
+				'sessionHandle' => $sessionHandle,
+	   			'itemsIdArray' => $slice,
+	   			'getDesc' => 0,
+	   			'getImageUrl' => 0,
+	   			'getAttribs' => 0,
+	   			'getPostageOptions' => 0,
+	   			'getCompanyInfo' => 0,
+	   			'getProductInfo' => 0
+			);
+			
+			$result = $this -> doGetItemsInfo($doGetItemsInfo_request);	
+			
+			if (isset($result -> arrayItemsNotFound -> item))
+			{
+				
+				if (!is_array($result -> arrayItemsNotFound -> item))
+				{
+					$result -> arrayItemsNotFound -> item = array($result -> arrayItemsNotFound -> item);
+				}
+				
+				foreach ($result -> arrayItemsNotFound -> item as $item)
+				{
+					$notExistsIdsArray[] = $item;
+				}
+				
+			}
+			
+			$offset += $limit;
+		
+		}
+		while ($offset < count($auctionsIds));
+		
+		return $notExistsIdsArray;		
+	}
+	
 }
 
 ?>

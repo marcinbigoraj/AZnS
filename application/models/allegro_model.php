@@ -110,6 +110,17 @@ class Allegro_model extends CI_Model {
 	{
 		return $this -> db -> query("SELECT * FROM found_auctions WHERE id_user=$userId");
 	}
+	
+	public function getAllFoundedAuctions()
+	{
+		$query = $this -> db -> query("SELECT DISTINCT id_auc FROM found_auctions");
+		return $query -> result();
+	}
+	
+	public function removeFoundedAuctionById($whereIds)
+	{
+		$this -> db -> query("DELETE FROM found_auctions WHERE id_auc IN ($whereIds)");		
+	}
 
 	public function getVersionFromDB()
 	{

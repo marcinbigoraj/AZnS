@@ -187,6 +187,50 @@ class BasicDataService extends CI_Controller
 		
 		return $isNewVersion;
 	}
+	
+	public function removeEndedAuctions()
+	{
+		
+		$this -> load -> library('allegrowebapisoapclient');
+		
+		$auctions = $this -> allegro_model -> getAllFoundedAuctions();
+		$auctionsIds = array();
+		
+		foreach ($auctions as $auction) 
+		{
+			$auctionsIds[] = $auction->id_auc + 0;
+		}
+		//$auctionsIds[] = 31746250916;
+		//$auctionsIds[] = 31746250914;
+		
+		$notExistsIds = $this -> allegrowebapisoapclient -> getNotExistsAuctions($auctionsIds);
+		$message = '';
+		
+		if (count($notExistsIds) > 0)
+		{
+					
+			$inText = '';	
+			foreach ($notExistsIds as $id)
+			{
+				$inText .= $id . ',';
+			}
+			
+			$inText = substr_replace($inText, "", -1);
+			$this -> allegro_model -> removeFoundedAuctionById($inText);
+			
+			$message = "Usunięto z tablicy znalezionych aukcji następujące, nieaktywne: $inText";
+	
+		}
+		else 
+		{
+			$message = "Nie znaleziono nieaktywnych aukcji";
+		}				
+		
+		log_message('info', $message);
+		echo $message;
+		
+	}
+	
 }
 
 ?>
