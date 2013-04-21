@@ -10,6 +10,9 @@ class SearchService extends CI_Controller {
 		
 		$this -> load -> library('allegrowebapisoapclient');	
 		$this -> load -> library('phpmailer/phpmailer');	
+		
+		$config = $this -> config -> item('AllegroAPI');
+		$allegroURL = $config['serviceurl'];
 
 		$message = '';
 		$savedUserId = -1;
@@ -143,7 +146,7 @@ class SearchService extends CI_Controller {
 								$message .= '<td rowspan="2"><img src="http://static.allegrostatic.pl/site_images/1/0/layout/showItemNoPhoto.png" alt="Brak zdjęcia" style="width:100px; height:auto;" /></td>';
 							}
 			
-							$message .= '<td style="width:500px;"><a href="http://testwebapi.pl/show_item.php?item='.$auction -> sItId.'" style="color:blue; font-weight:bold; text-decoration:underline;">' . $auction -> sItId . ' - ' . $auction -> sItName . '</a></td>';
+							$message .= '<td style="width:500px;"><a href="'.$allegroURL.'show_item.php?item='.$auction -> sItId.'" style="color:blue; font-weight:bold; text-decoration:underline;">' . $auction -> sItId . ' - ' . $auction -> sItName . '</a></td>';
 												
 							$message .= '<td style="text-align:right; width:150px;">Data zakończenia</td>';
 							
