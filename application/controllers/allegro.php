@@ -56,9 +56,9 @@ class Allegro extends CI_Controller {
 			$user_id = $this -> ion_auth -> user() -> row() -> id;
 			$keywords = $_POST['keywords'];
 			$id_cat = $_POST['id_cat'];
-			$anyWord = $_POST['anyWord'];
-			$includeDescription = $_POST['includeDescription'];
-			$buyNow = $_POST['buyNow'];
+			$anyWord = isset($_POST['anyWord']) ? $_POST['anyWord'] : "false";
+			$includeDescription = isset($_POST['includeDescription']) ? $_POST['includeDescription'] : "false";
+			$buyNow = isset($_POST['buyNow']) ? $_POST['buyNow'] : "false";
 			$city = $_POST['city'];
 			$voivodeship = $_POST['voivodeship'];
 			$minPrice = $_POST['minPrice'];
@@ -262,7 +262,7 @@ class Allegro extends CI_Controller {
 		
 		if ($maxPrice != 0)
 		{
-			$this -> form_validation -> set_rules('maxPrice', 'Cena maksymalna', 'is_natural|less_than[100000]|greater_than['.$minPrice.']');
+			$this -> form_validation -> set_rules('maxPrice', 'Cena maksymalna', 'is_natural|less_than[1000000]|greater_than['.$minPrice.']');
 		}
 		
 		if ($this -> form_validation -> run())
