@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 class BasicDataService extends CI_Controller
 {
