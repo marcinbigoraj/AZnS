@@ -10,6 +10,7 @@ $config['MailSMTPPassword'] = '';
 $config['MailFrom'] = '';
 $config['MailFromName'] = 'Allegro Search Service';
 $config['MailNoHTMLSupport'] = 'Brak możliwości odczytu wiadomości w formacie HTML';
+$config['SaveToFile'] = false;
 
 // ALLEGRO WEBAPI CONFIGURATION
 

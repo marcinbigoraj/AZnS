@@ -209,18 +209,29 @@ class SearchService extends CI_Controller {
 		
 		if (count($auctionsArray) > 0)
 		{
-				
-			if ($this -> mailSender($message, $savedEmail))
+			if(!$this -> config -> item('SaveToFile'))
 			{
-		
-				foreach($auctionsArray as $auctionId)
+				if ($this -> mailSender($message, $savedEmail))
 				{
-					$this -> allegro_model -> addSendedAuction($userId, $auctionId);
+					foreach($auctionsArray as $auctionId)
+					{
+						$this -> allegro_model -> addSendedAuction($userId, $auctionId);
+					}
+						
+					log_message('info', 'Email send: ' . $savedEmail);
 				}
-					
-				log_message('info', 'Email send: ' . $savedEmail);
- 			
 		 	}
+			else 
+			{
+				$file = "C:\\Temp\\".date("H;i;s d-m-Y")."a.html";
+				$fp = fopen($file, "w"); 
+				flock($fp, 2); 
+				fwrite($fp, $message); 
+				flock($fp, 3); 
+				fclose($fp); 
+				
+				
+			}
 
 		}
 		
