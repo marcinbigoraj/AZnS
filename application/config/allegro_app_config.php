@@ -2,7 +2,7 @@
 
 // MAIL CONFIGURATION
 
-$config['MailSecureType'] = 'tls';
+$config['MailSecureType'] = '';
 $config['MailSMTPHost'] = 'poczta.o2.pl';
 $config['MailPort'] = 587;
 $config['MailSMTPLogin'] = 'azns-allegro-api@o2.pl';
@@ -10,7 +10,7 @@ $config['MailSMTPPassword'] = 'AZnS2013';
 $config['MailFrom'] = 'azns-allegro-api@o2.pl';
 $config['MailFromName'] = 'Allegro Search Service';
 $config['MailNoHTMLSupport'] = 'Brak możliwości odczytu wiadomości w formacie HTML';
-$config['SaveToFile'] = true;
+$config['SaveToFile'] = false;
 
 // ALLEGRO WEBAPI CONFIGURATION
 

@@ -251,7 +251,12 @@ class SearchService extends CI_Controller {
 		$this -> phpmailer = new PHPMailer();
 		$this -> phpmailer -> IsSMTP();
 		$this -> phpmailer -> SMTPAuth = true;
-		$this -> phpmailer -> SMTPSecure = $this -> config -> item('MailSecureType');	
+		
+		if ($this -> config -> item('MailSecureType') != '')
+		{
+			$this -> phpmailer -> SMTPSecure = $this -> config -> item('MailSecureType');	
+		}
+		
 		$this -> phpmailer -> Host = $this -> config -> item('MailSMTPHost');
 		$this -> phpmailer -> Port = $this -> config -> item('MailPort');
 		$this -> phpmailer -> Username = $this -> config -> item('MailSMTPLogin');
