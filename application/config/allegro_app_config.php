@@ -3,14 +3,14 @@
 // MAIL CONFIGURATION
 
 $config['MailSecureType'] = 'tls';
-$config['MailSMTPHost'] = 'smtp.gmail.com';
+$config['MailSMTPHost'] = 'poczta.o2.pl';
 $config['MailPort'] = 587;
-$config['MailSMTPLogin'] = '';
-$config['MailSMTPPassword'] = '';
-$config['MailFrom'] = '';
+$config['MailSMTPLogin'] = 'azns-allegro-api@o2.pl';
+$config['MailSMTPPassword'] = 'AZnS2013';
+$config['MailFrom'] = 'azns-allegro-api@o2.pl';
 $config['MailFromName'] = 'Allegro Search Service';
 $config['MailNoHTMLSupport'] = 'Brak możliwości odczytu wiadomości w formacie HTML';
-$config['SaveToFile'] = false;
+$config['SaveToFile'] = true;
 
 // ALLEGRO WEBAPI CONFIGURATION
 

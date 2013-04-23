@@ -10,6 +10,7 @@ class SearchService extends CI_Controller {
 		
 		$this -> load -> library('allegrowebapisoapclient');	
 		$this -> load -> library('phpmailer/phpmailer');	
+		$this->load->helper('file');
 		
 		$config = $this -> config -> item('AllegroAPI');
 		$allegroURL = $config['serviceurl'];
@@ -209,8 +210,11 @@ class SearchService extends CI_Controller {
 		
 		if (count($auctionsArray) > 0)
 		{
+			
 			if(!$this -> config -> item('SaveToFile'))
 			{
+				
+				
 				if ($this -> mailSender($message, $savedEmail))
 				{
 					foreach($auctionsArray as $auctionId)
@@ -220,16 +224,16 @@ class SearchService extends CI_Controller {
 						
 					log_message('info', 'Email send: ' . $savedEmail);
 				}
+				
 		 	}
 			else 
 			{
-				$file = "C:\\Temp\\".date("H;i;s d-m-Y")."a.html";
-				$fp = fopen($file, "w"); 
-				flock($fp, 2); 
-				fwrite($fp, $message); 
-				flock($fp, 3); 
-				fclose($fp); 
 				
+				$file = "C:\\Temp\\".date("H;i;s d-m-Y")."a.html";
+				if (write_file($file, $message))
+				{
+					log_message('info', 'Dla użytkownika ' . $savedEmail . ' zapisano plik ' . $file);
+				}
 				
 			}
 
