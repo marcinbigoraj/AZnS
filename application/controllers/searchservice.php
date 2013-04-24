@@ -232,6 +232,10 @@ class SearchService extends CI_Controller {
 				$file = "C:\\Temp\\".date("H;i;s d-m-Y")."a.html";
 				if (write_file($file, $message))
 				{
+					foreach($auctionsArray as $auctionId)
+					{
+						$this -> allegro_model -> addSendedAuction($userId, $auctionId);
+					}
 					log_message('info', 'Dla użytkownika ' . $savedEmail . ' zapisano plik ' . $file);
 				}
 				
